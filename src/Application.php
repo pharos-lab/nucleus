@@ -8,13 +8,19 @@ use Nucleus\Routing\Router;
 class Application
 {
     protected Router $router;
+    protected $config;
+    protected string $basePath;
 
-    public function __construct()
+    public function __construct($basePath)
     {
+        $this->basePath = $basePath;
         $this->router = new Router();
+        $this->config = file_exists($basePath . '/config/app.php') 
+            ? require $basePath . '/config/app.php'
+            : [];
 
         // Load default routes
-        $this->loadRoutes(__DIR__ . '/../routes/web.php');
+        $this->loadRoutes($this->config['routes_path']);
     }
 
     protected function loadRoutes(string $path): void

@@ -30,7 +30,7 @@ class Router
      */
     public function dispatch(string $uri, string $method)
     {
-        $uri = strtok($uri, '?'); // enlever query string
+        $uri = strtok($uri, '?');
 
         if (isset($this->routes[$method][$uri])) {
             $action = $this->routes[$method][$uri];

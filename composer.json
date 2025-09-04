@@ -6,7 +6,7 @@
     "autoload": {
         "psr-4": {
             "Nucleus\\": "src/",
-            "App\\": "."
+            "App\\": "app/"
         }
     },
     "authors": [

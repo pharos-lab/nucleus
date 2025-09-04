@@ -27,6 +27,7 @@ class Response
         }
 
         echo $this->content;
+        return;
     }
 
     /**
