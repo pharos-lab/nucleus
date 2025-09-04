@@ -5,7 +5,8 @@
     "license": "mit",
     "autoload": {
         "psr-4": {
-            "Nucleus\\": "src/"
+            "Nucleus\\": "src/",
+            "App\\": "."
         }
     },
     "authors": [
