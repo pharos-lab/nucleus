@@ -37,16 +37,14 @@ class Router
 
             // Closure simple
             if (is_callable($action)) {
-                echo $action();
-                return;
+                return $action();
             }
 
             // Controller@method
             if (is_array($action) && count($action) === 2) {
                 [$controller, $method] = $action;
                 $controller = new $controller();
-                echo $controller->$method();
-                return;
+                return $controller->$method();
             }
         }
 

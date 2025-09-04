@@ -2,7 +2,8 @@
 
 namespace Nucleus;
 
-use Nucleus\Routing\Router; // on suppose qu'il existera plus tard
+use Nucleus\Http\Response;
+use Nucleus\Routing\Router;
 
 class Application
 {
@@ -12,7 +13,7 @@ class Application
     {
         $this->router = new Router();
 
-        // Charger les routes par défaut
+        // Load default routes
         $this->loadRoutes(__DIR__ . '/../routes/web.php');
     }
 
@@ -29,6 +30,13 @@ class Application
         $uri = $_SERVER['REQUEST_URI'] ?? '/';
         $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
-        $this->router->dispatch($uri, $method);
+        $output = $this->router->dispatch($uri, $method);
+
+        // Send the output if Response or create it
+        if ($output instanceof Response) {
+            $output->send();
+        } else {
+            (new Response((string) $output))->send();
+        }
     }
 }
