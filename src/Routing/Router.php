@@ -45,15 +45,7 @@ class Router
                 // extract parameters from route
                 $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
 
-                if (is_callable($action)) {
-                    return $action($request, $params);
-                }
-
-                if (is_array($action) && count($action) === 2) {
-                    [$controller, $methodName] = $action;
-                    $controller = new $controller();
-                    return $controller->$methodName($request, $params);
-                }
+                return Dispatcher::dispatch($action, $request, $params);
             }
         }
 

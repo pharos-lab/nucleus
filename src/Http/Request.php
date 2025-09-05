@@ -2,7 +2,7 @@
 
 namespace Nucleus\Http;
 
-class Request
+class Request implements \JsonSerializable
 {
     protected string $method;
     protected string $uri;
@@ -52,5 +52,19 @@ class Request
     public function allInput(): array
     {
         return $this->post;
+    }
+
+    /**
+     * Pour json_encode()
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'method' => $this->method,
+            'uri' => $this->uri,
+            'path' => $this->path,
+            'query' => $this->query,
+            'post'  => $this->post,
+        ];
     }
 }

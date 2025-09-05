@@ -7,7 +7,7 @@ use Nucleus\View\View;
 
 abstract class BaseController
 {
-    protected function view(string $view, array $data = []): string
+    protected function view(string $view, array $data = []): response
     {
         return View::make($view, $data);
     }

@@ -2,6 +2,8 @@
 
 namespace Nucleus\View;
 
+use Nucleus\Http\Response;
+
 class View
 {
     protected static string $basePath = '';
@@ -11,7 +13,7 @@ class View
         self::$basePath = rtrim($path, '/');
     }
 
-    public static function make(string $view, array $data = []): string
+    public static function make(string $view, array $data = []): Response
     {
         $viewPath = self::$basePath . '/views/' . str_replace('.', '/', $view) . '.php';
 
@@ -23,6 +25,8 @@ class View
 
         ob_start();
         include $viewPath;
-        return ob_get_clean();
+        $output =  ob_get_clean();
+
+        return new Response($content);
     }
 }
