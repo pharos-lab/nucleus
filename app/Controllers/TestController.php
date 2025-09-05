@@ -2,17 +2,18 @@
 
 namespace App\Controllers;
 
-use Nucleus\View\View;
+use Nucleus\Controller\BaseController;
+use Nucleus\Http\Request;
 
-class TestController
+class TestController extends BaseController
 {
-    public function index($request)
+    public function index(Request $request)
     {
-        return View::make('home', ['name' => 'mth']);
+        return $this->view('home', ['name' => 'mth']);
     }
 
-    public function about()
+    public function api(Request $request)
     {
-        return "Page About via TestController";
+        return $this->json(['message' => 'Hello API']);
     }
 }

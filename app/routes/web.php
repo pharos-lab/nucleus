@@ -10,7 +10,7 @@ $router->get('/', function () {
 
 // Controller@method
 $router->get('/home', [TestController::class, 'index']);
-$router->get('/about', [TestController::class, 'about']);
+$router->get('/api', [TestController::class, 'api']);
 
 $router->get('/json', function () {
     return Response::json(['message' => 'Hello JSON 🚀']);
