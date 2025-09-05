@@ -19,3 +19,5 @@ $router->get('/json', function () {
 $router->get('/text', function () {
     return 'Simple texte';
 });
+
+$router->get('/text/{id}/test/{post}', [TestController::class, 'param']);

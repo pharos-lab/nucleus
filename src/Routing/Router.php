@@ -36,19 +36,24 @@ class Router
         $method = $request->getMethod();
         $path = $request->getPath();
 
-        if (isset($this->routes[$method][$path])) {
-            $action = $this->routes[$method][$path];
+        foreach ($this->routes[$method] as $route => $action) {
+            // Transform path into regex
+            $pattern = preg_replace('#\{(\w+)\}#', '(?P<$1>[^/]+)', $route);
+            $pattern = '#^' . $pattern . '$#';
 
-            // Closure simple → injection possible
-            if (is_callable($action)) {
-                return $action($request);
-            }
+            if (preg_match($pattern, $path, $matches)) {
+                // extract parameters from route
+                $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
 
-            // Controller + méthode
-            if (is_array($action) && count($action) === 2) {
-                [$controller, $method] = $action;
-                $controller = new $controller();
-                return $controller->$method($request);
+                if (is_callable($action)) {
+                    return $action($request, $params);
+                }
+
+                if (is_array($action) && count($action) === 2) {
+                    [$controller, $methodName] = $action;
+                    $controller = new $controller();
+                    return $controller->$methodName($request, $params);
+                }
             }
         }
 

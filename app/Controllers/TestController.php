@@ -16,4 +16,9 @@ class TestController extends BaseController
     {
         return $this->json(['message' => 'Hello API']);
     }
+
+    public function param(Request $request, $params)
+    {
+        return $this->json(['message' => 'Hello API']);
+    }
 }
