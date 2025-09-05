@@ -28,8 +28,12 @@ class Container
 
         foreach ($constructor->getParameters() as $param) {
             $paramClass = $param->getType()?->getName();
+            
             if ($paramClass) {
                 $params[] = $this->make($paramClass);
+            } elseif ($param->isDefaultValueAvailable()) {
+                // Si une valeur par défaut existe, on la prend
+                $params[] = $param->getDefaultValue();
             } else {
                 $params[] = null;
             }
