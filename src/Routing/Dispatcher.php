@@ -19,11 +19,13 @@ class Dispatcher
     
     public static function dispatch($action, Request $request, array $params = [])
     {
+        $result = null;
+        
         if (is_callable($action)) {
             var_dump('action!');
             $ref = new ReflectionFunction($action);
             $args = self::resolveArgs($ref->getParameters(), $request, $params);
-            return $action(...$args);
+            $result =  $action(...$args);
         }
 
         if (is_array($action) && count($action) === 2) {
@@ -31,10 +33,16 @@ class Dispatcher
             $controller = new $controller();
             $ref = new ReflectionMethod($controller, $methodName);
             $args = self::resolveArgs($ref->getParameters(), $request, $params);
-            return $ref->invokeArgs($controller, $args);
+            $result =  $ref->invokeArgs($controller, $args);
+        } else {   
+            return Response::notFound();
         }
 
-        return Response::notFound();
+        if ($result instanceof Response) {
+            return $result;
+        }
+
+        return new Response((string) $result);
     }
 
     protected static function resolveArgs(array $refParams, Request $request, array $params): array

@@ -44,13 +44,8 @@ class Application
     {
         $request = new Request();
 
-        $output = $this->router->dispatch($request);
+        $response = $this->router->dispatch($request);
 
-        // Send the output if Response or create it
-        if ($output instanceof Response) {
-            $output->send();
-        } else {
-            (new Response((string) $output))->send();
-        }
+        $response->send();
     }
 }
