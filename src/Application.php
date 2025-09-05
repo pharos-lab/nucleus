@@ -2,8 +2,10 @@
 
 namespace Nucleus;
 
+use Nucleus\Container\Container;
 use Nucleus\Http\Request;
 use Nucleus\Http\Response;
+use Nucleus\Routing\Dispatcher;
 use Nucleus\Routing\Router;
 use Nucleus\View\View;
 
@@ -12,6 +14,7 @@ class Application
     protected Router $router;
     protected $config;
     protected string $basePath;
+    protected Container $container;
 
     public function __construct($basePath)
     {
@@ -24,6 +27,9 @@ class Application
         // Load default routes
         $this->loadRoutes($this->config['routes_path']);
         View::setBasePath($basePath);
+        
+        $this->container = new Container();
+        Dispatcher::setContainer($this->container);
     }
 
     protected function loadRoutes(string $path): void

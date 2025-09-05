@@ -25,7 +25,7 @@ class View
 
         ob_start();
         include $viewPath;
-        $output =  ob_get_clean();
+        $content =  ob_get_clean();
 
         return new Response($content);
     }
