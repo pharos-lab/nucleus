@@ -2,12 +2,13 @@
 
 namespace App\Controllers;
 
+use Nucleus\View\View;
+
 class TestController
 {
     public function index($request)
     {
-        var_dump($request);
-        return "Bienvenue sur Nucleus, contrôleur OK ! 🚀";
+        return View::make('home', ['name' => 'mth']);
     }
 
     public function about()

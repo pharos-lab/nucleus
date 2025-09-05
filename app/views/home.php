@@ -1,0 +1,1 @@
+<h1>Bienvenue <?= htmlspecialchars($name) ?> sur Nucleus 🚀</h1>

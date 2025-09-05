@@ -5,6 +5,7 @@ namespace Nucleus;
 use Nucleus\Http\Request;
 use Nucleus\Http\Response;
 use Nucleus\Routing\Router;
+use Nucleus\View\View;
 
 class Application
 {
@@ -22,6 +23,7 @@ class Application
 
         // Load default routes
         $this->loadRoutes($this->config['routes_path']);
+        View::setBasePath($basePath);
     }
 
     protected function loadRoutes(string $path): void
