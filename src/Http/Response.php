@@ -42,4 +42,9 @@ class Response
     {
         return new self(json_encode($data), $status, ['Content-Type' => 'application/json']);
     }
+
+    public static function notFound(string $message = '404 Not Found'): self
+    {
+        return new self($message, 404);
+    }
 }

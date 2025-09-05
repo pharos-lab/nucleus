@@ -2,6 +2,8 @@
 
 namespace Nucleus\Routing;
 
+use Nucleus\Http\Response;
+
 class Router 
 {
      protected $routes = [
@@ -49,7 +51,6 @@ class Router
         }
 
         // Fallback 404
-        http_response_code(404);
-        echo "404 Not Found";
+        return Response::notFound();
     }
 }
