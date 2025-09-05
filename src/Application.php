@@ -2,6 +2,7 @@
 
 namespace Nucleus;
 
+use Nucleus\Http\Request;
 use Nucleus\Http\Response;
 use Nucleus\Routing\Router;
 
@@ -33,10 +34,9 @@ class Application
 
     public function run(): void
     {
-        $uri = $_SERVER['REQUEST_URI'] ?? '/';
-        $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+        $request = new Request();
 
-        $output = $this->router->dispatch($uri, $method);
+        $output = $this->router->dispatch($request);
 
         // Send the output if Response or create it
         if ($output instanceof Response) {

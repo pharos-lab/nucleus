@@ -4,8 +4,9 @@ namespace App\Controllers;
 
 class TestController
 {
-    public function index()
+    public function index($request)
     {
+        var_dump($request);
         return "Bienvenue sur Nucleus, contrôleur OK ! 🚀";
     }
 

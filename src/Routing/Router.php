@@ -2,6 +2,7 @@
 
 namespace Nucleus\Routing;
 
+use Nucleus\Http\Request;
 use Nucleus\Http\Response;
 
 class Router 
@@ -30,23 +31,24 @@ class Router
     /**
      * Résoudre et exécuter la route
      */
-    public function dispatch(string $uri, string $method)
+    public function dispatch(Request $request)
     {
-        $uri = strtok($uri, '?');
+        $method = $request->getMethod();
+        $path = $request->getPath();
 
-        if (isset($this->routes[$method][$uri])) {
-            $action = $this->routes[$method][$uri];
+        if (isset($this->routes[$method][$path])) {
+            $action = $this->routes[$method][$path];
 
-            // Closure simple
+            // Closure simple → injection possible
             if (is_callable($action)) {
-                return $action();
+                return $action($request);
             }
 
-            // Controller@method
+            // Controller + méthode
             if (is_array($action) && count($action) === 2) {
                 [$controller, $method] = $action;
                 $controller = new $controller();
-                return $controller->$method();
+                return $controller->$method($request);
             }
         }
 
