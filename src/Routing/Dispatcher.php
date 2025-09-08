@@ -22,19 +22,18 @@ class Dispatcher
         $result = null;
         
         if (is_callable($action)) {
-            var_dump('action!');
             $ref = new ReflectionFunction($action);
             $args = self::resolveArgs($ref->getParameters(), $request, $params);
             $result =  $action(...$args);
         }
-
-        if (is_array($action) && count($action) === 2) {
+        elseif (is_array($action) && count($action) === 2) {
             [$controller, $methodName] = $action;
-            $controller = new $controller();
+            $controller = self::$container?->make($controller) ?? new $controller();
             $ref = new ReflectionMethod($controller, $methodName);
             $args = self::resolveArgs($ref->getParameters(), $request, $params);
             $result =  $ref->invokeArgs($controller, $args);
-        } else {   
+        } 
+        else {
             return Response::notFound();
         }
 

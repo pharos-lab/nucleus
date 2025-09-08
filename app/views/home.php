@@ -1,3 +1,3 @@
 <h1>Bienvenue <?= htmlspecialchars($name) ?> sur Nucleus 🚀</h1>
 
-<pre><?= var_dump($test) ?></pre>
+<pre><?= var_dump('test page') ?></pre>

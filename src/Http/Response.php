@@ -2,6 +2,8 @@
 
 namespace Nucleus\Http;
 
+use Nucleus\View\View;
+
 class Response
 {
     protected string $content;
@@ -43,8 +45,15 @@ class Response
         return new self(json_encode($data), $status, ['Content-Type' => 'application/json']);
     }
 
-    public static function notFound(string $message = '404 Not Found'): self
+    public static function notFound(): self
     {
-        return new self($message, 404);
+        return View::make('errors.404')->status(404);
     }
+
+    public function status(int $code): self
+    {
+        $this->status = $code;
+        return $this;
+    }
+
 }
