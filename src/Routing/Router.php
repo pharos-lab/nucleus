@@ -15,17 +15,21 @@ class Router
     /**
      * Enregistrer une route GET
      */
-    public function get(string $uri, $action): void
+    public function get(string $uri, $action): Route
     {
-        $this->routes['GET'][$uri] = $action;
+        $route = new Route('GET', $uri, $action);
+        $this->routes['GET'][] = $route;
+        return $route; 
     }
 
     /**
      * Enregistrer une route POST
      */
-    public function post(string $uri, $action): void
+    public function post(string $uri, $action): Route
     {
-        $this->routes['POST'][$uri] = $action;
+        $route = new Route('POST', $uri, $action);
+        $this->routes['POST'][] = $route;
+        return $route;
     }
 
     /**
@@ -36,16 +40,16 @@ class Router
         $method = $request->getMethod();
         $path = $request->getPath();
 
-        foreach ($this->routes[$method] as $route => $action) {
+        foreach ($this->routes[$method] as $route) {
             // Transform path into regex
-            $pattern = preg_replace('#\{(\w+)\}#', '(?P<$1>[^/]+)', $route);
+            $pattern = preg_replace('#\{(\w+)\}#', '(?P<$1>[^/]+)', $route->path);
             $pattern = '#^' . $pattern . '$#';
 
             if (preg_match($pattern, $path, $matches)) {
                 // extract parameters from route
-                $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
+                $route->params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
 
-                return Dispatcher::dispatch($action, $request, $params);
+                return $route;
             }
         }
 
