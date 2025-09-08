@@ -16,60 +16,82 @@ class RouteResolver
     {
         self::$container = $container;
     }
-    
-    public static function resolve($action, Request $request, array $params = [])
+
+    /**
+     * Resolve the action and return a Response
+     */
+    public static function resolve($action, Request $request, array $params = []): Response
     {
         $result = null;
-        
-        if (is_callable($action)) {
-            $ref = new ReflectionFunction($action);
-            $args = self::resolveArgs($ref->getParameters(), $request, $params);
-            $result =  $action(...$args);
-        }
-        elseif (is_array($action) && count($action) === 2) {
-            [$controller, $methodName] = $action;
-            $controller = self::$container?->make($controller) ?? new $controller();
-            $ref = new ReflectionMethod($controller, $methodName);
-            $args = self::resolveArgs($ref->getParameters(), $request, $params);
-            $result =  $ref->invokeArgs($controller, $args);
-        } 
-        else {
+
+        if (self::isCallable($action)) {
+            $result = self::resolveCallable($action, $request, $params);
+        } elseif (self::isControllerAction($action)) {
+            $result = self::resolveController($action, $request, $params);
+        } else {
             return Response::notFound();
         }
 
-        if ($result instanceof Response) {
-            return $result;
-        }
-
-        return new Response((string) $result);
+        return $result instanceof Response ? $result : new Response((string) $result);
     }
 
+    protected static function isCallable($action): bool
+    {
+        return is_callable($action);
+    }
+
+    protected static function isControllerAction($action): bool
+    {
+        return is_array($action) && count($action) === 2;
+    }
+
+    protected static function resolveCallable(callable $action, Request $request, array $params)
+    {
+        $ref = new ReflectionFunction($action);
+        $args = self::resolveArgs($ref->getParameters(), $request, $params);
+        return $action(...$args);
+    }
+
+    protected static function resolveController(array $action, Request $request, array $params)
+    {
+        [$controllerClass, $methodName] = $action;
+        $controller = self::$container?->make($controllerClass) ?? new $controllerClass();
+        $ref = new ReflectionMethod($controller, $methodName);
+        $args = self::resolveArgs($ref->getParameters(), $request, $params);
+        return $ref->invokeArgs($controller, $args);
+    }
+
+    /**
+     * Resolve method parameters using request, URL params, or container
+     */
     protected static function resolveArgs(array $refParams, Request $request, array $params): array
     {
         $args = [];
+
         foreach ($refParams as $param) {
             $name = $param->getName();
             $type = $param->getType()?->getName();
 
-            // Injection spéciale du Request
+            // Special injection of Request
             if ($type === Request::class || $name === 'request') {
                 $args[] = $request;
             }
-            // Paramètre venant de l’URL
+            // URL parameter
             elseif (isset($params[$name])) {
                 $args[] = $params[$name];
             }
-            // Classe à instancier via le container
+            // Class resolved via container
             elseif ($type && class_exists($type)) {
                 $args[] = self::$container?->make($type);
             }
-            // Sinon → valeur par défaut ou null
+            // Default value or null
             else {
                 $args[] = $param->isDefaultValueAvailable()
                     ? $param->getDefaultValue()
                     : null;
             }
         }
+
         return $args;
     }
 }
