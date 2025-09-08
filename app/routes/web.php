@@ -4,13 +4,15 @@ use App\Controllers\TestController;
 use Nucleus\Http\Response;
 
 // Closure simple
-$router->get('/', function () {
-    return 'Hello world from Nucleus 🚀';
-})->middleware([App\Middleware\RouteMiddleware::class]);
-
 // Controller@method
 $router->get('/home', [TestController::class, 'index']);
 $router->get('/api', [TestController::class, 'api']);
+
+$router->get('/{id}', function () {
+    return 'Hello world from Nucleus 🚀';
+})->middleware([App\Middleware\RouteMiddleware::class])
+->where(['id' => '[0-9]+']);
+
 
 $router->get('/json', function () {
     return Response::json(['message' => 'Hello JSON 🚀']);
