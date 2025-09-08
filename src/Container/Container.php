@@ -2,7 +2,9 @@
 
 namespace Nucleus\Container;
 
-class Container
+use Nucleus\Contracts\ContainerInterface;
+
+class Container implements ContainerInterface
 {
     protected array $bindings = [];
 

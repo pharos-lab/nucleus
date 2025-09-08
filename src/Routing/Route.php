@@ -2,7 +2,9 @@
 
 namespace Nucleus\Routing;
 
-class Route
+use Nucleus\Contracts\RouteInterface;
+
+class Route implements RouteInterface
 {
     public string $method;
     public string $path;

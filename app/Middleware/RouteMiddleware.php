@@ -2,10 +2,11 @@
 
 namespace App\Middleware;
 
+use Nucleus\Contracts\MiddlewareInterface;
 use Nucleus\Http\Request;
 use Nucleus\Http\Response;
 
-class RouteMiddleware
+class RouteMiddleware implements MiddlewareInterface
 {
     public function handle(Request $request, callable $next): Response
     {

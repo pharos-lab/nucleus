@@ -2,10 +2,10 @@
 
 namespace Nucleus\Routing;
 
+use Nucleus\Contracts\RouterInterface;
 use Nucleus\Http\Request;
-use Nucleus\Http\Response;
 
-class Router 
+class Router implements RouterInterface
 {
     protected array $routes = [
         "GET" => [],
