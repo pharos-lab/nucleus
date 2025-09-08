@@ -4,9 +4,8 @@ namespace Nucleus;
 
 use Nucleus\Container\Container;
 use Nucleus\Http\Request;
-use Nucleus\Http\Response;
-use Nucleus\Routing\Dispatcher;
 use Nucleus\Routing\Router;
+use Nucleus\Routing\RouteResolver;
 use Nucleus\View\View;
 
 class Application
@@ -30,7 +29,7 @@ class Application
         View::setBasePath($basePath);
         
         $this->container = new Container();
-        Dispatcher::setContainer($this->container);
+        RouteResolver::setContainer($this->container);
 
         // Load global middlewares from config if exists
         $middlewareConfig = $basePath . '/config/middleware.php';

@@ -52,8 +52,5 @@ class Router
                 return $route;
             }
         }
-
-        // Fallback 404
-        return Response::notFound();
     }
 }

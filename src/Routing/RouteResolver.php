@@ -8,7 +8,7 @@ use Nucleus\Http\Response;
 use ReflectionFunction;
 use ReflectionMethod;
 
-class Dispatcher
+class RouteResolver
 {
     protected static ?Container $container = null;
 
@@ -17,7 +17,7 @@ class Dispatcher
         self::$container = $container;
     }
     
-    public static function dispatch($action, Request $request, array $params = [])
+    public static function resolve($action, Request $request, array $params = [])
     {
         $result = null;
         

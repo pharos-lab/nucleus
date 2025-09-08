@@ -6,7 +6,7 @@ use Nucleus\Http\Response;
 // Closure simple
 $router->get('/', function () {
     return 'Hello world from Nucleus 🚀';
-})->middleware(['App\Middleware\RouteMiddleware']);
+})->middleware([App\Middleware\RouteMiddleware::class]);
 
 // Controller@method
 $router->get('/home', [TestController::class, 'index']);
