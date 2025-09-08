@@ -15,6 +15,7 @@ class Application
     protected $config;
     protected string $basePath;
     protected Container $container;
+    protected array $middlewares = [];
 
     public function __construct($basePath)
     {
@@ -30,6 +31,13 @@ class Application
         
         $this->container = new Container();
         Dispatcher::setContainer($this->container);
+
+        // Load global middlewares from config if exists
+        $middlewareConfig = $basePath . '/config/middleware.php';
+        $this->middlewares = file_exists($middlewareConfig)
+            ? require $middlewareConfig
+            : [];
+            var_dump($this->middlewares); // --- IGNORE ---
     }
 
     protected function loadRoutes(string $path): void
@@ -44,7 +52,11 @@ class Application
     {
         $request = new Request();
 
-        $response = $this->router->dispatch($request);
+        // Create kernel using router + middlewares
+        $kernel = new Nucleus($this->router, $this->middlewares);
+
+        // Handle request through middleware pipeline
+        $response = $kernel->handle($request);
 
         $response->send();
     }
