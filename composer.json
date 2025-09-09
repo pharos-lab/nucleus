@@ -6,7 +6,8 @@
     "autoload": {
         "psr-4": {
             "Nucleus\\": "src/",
-            "App\\": "app/"
+            "App\\": "app/",
+            "Tests\\": "tests/"
         }
     },
     "authors": [
@@ -15,5 +16,7 @@
             "email": "mthdht@gmail.com"
         }
     ],
-    "require": {}
+    "require-dev": {
+        "phpunit/phpunit": "^12.3"
+    }
 }
