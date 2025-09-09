@@ -50,10 +50,54 @@ class Response
         return View::make('errors.404')->status(404);
     }
 
+    /**
+     * Set HTTP status code
+     */
     public function status(int $code): self
     {
         $this->status = $code;
         return $this;
     }
 
+    /**
+     * Get HTTP status code
+     */
+    public function getStatusCode(): int
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set response body
+     */
+    public function setBody(string $content): self
+    {
+        $this->content = $content;
+        return $this;
+    }
+
+    /**
+     * Get response body
+     */
+    public function getBody(): string
+    {
+        return $this->content;
+    }
+
+    /**
+     * Set a header
+     */
+    public function setHeader(string $name, string $value): self
+    {
+        $this->headers[$name] = $value;
+        return $this;
+    }
+
+    /**
+     * Get a header value
+     */
+    public function getHeader(string $name): ?string
+    {
+        return $this->headers[$name] ?? null;
+    }
 }

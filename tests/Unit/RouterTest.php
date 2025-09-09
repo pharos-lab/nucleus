@@ -39,7 +39,6 @@ class RouterTest extends TestCase
         $routeRegistered = $this->router->get('/user/{id}', fn() => 'ok');
 
         $request = new FakeRequest('/user/42', 'GET');
-        var_dump($request->getPath());
 
         $route = $this->router->dispatch($request);
 

@@ -45,8 +45,16 @@ class RouteResolver
         return is_array($action) && count($action) === 2;
     }
 
-    protected static function resolveCallable(callable $action, Request $request, array $params)
+    protected static function resolveCallable($action, Request $request, array $params)
     {
+        // Handle invokable objects
+        if (is_object($action) && method_exists($action, '__invoke')) {
+            $ref = new ReflectionMethod($action, '__invoke');
+            $args = self::resolveArgs($ref->getParameters(), $request, $params);
+            return $ref->invokeArgs($action, $args);
+        }
+
+        // Handle normal closures/functions
         $ref = new ReflectionFunction($action);
         $args = self::resolveArgs($ref->getParameters(), $request, $params);
         return $action(...$args);
