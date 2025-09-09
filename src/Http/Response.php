@@ -100,4 +100,10 @@ class Response
     {
         return $this->headers[$name] ?? null;
     }
+
+    public function __toString(): string
+    {
+        return $this->content;
+    }
+
 }
