@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nucleus\Controller;
 
 use Nucleus\Http\Response;

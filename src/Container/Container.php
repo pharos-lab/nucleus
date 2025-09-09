@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nucleus\Container;
 
 use Nucleus\Contracts\ContainerInterface;
