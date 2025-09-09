@@ -6,7 +6,7 @@ use Nucleus\Http\Request;
 use Nucleus\Http\Response;
 use Nucleus\Contracts\MiddlewareInterface;
 
-class FakeMiddlewaretwo implements MiddlewareInterface
+class FakeMiddlewareTwo implements MiddlewareInterface
 {
     public function handle(Request $request, Callable $next):Response
     {
