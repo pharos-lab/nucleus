@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Nucleus\Routing;
 
+use Nucleus\Contracts\Http\NucleusRequestInterface;
 use Nucleus\Contracts\RouterInterface;
-use Psr\Http\Message\ServerRequestInterface;
 
 class Router implements RouterInterface
 {
@@ -37,7 +37,7 @@ class Router implements RouterInterface
     /**
      * Dispatch PSR-7 request to matching route
      */
-    public function dispatch(ServerRequestInterface $request): ?Route
+    public function dispatch(NucleusRequestInterface $request): ?Route
     {
         $method = strtoupper($request->getMethod());
         $path = $request->getUri()->getPath();

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Nucleus;
 
 use Nucleus\Contracts\Http\NucleusResponseInterface;
-use Nucleus\Http\Request;
 use Nucleus\Http\Response;
 use Nucleus\Routing\Router;
 use Nucleus\Routing\RouteResolver;
