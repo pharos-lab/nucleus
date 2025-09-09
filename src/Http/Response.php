@@ -2,10 +2,10 @@
 
 namespace Nucleus\Http;
 
-use Psr\Http\Message\ResponseInterface;
+use Nucleus\Contracts\Http\NucleusResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-class Response implements ResponseInterface
+class Response implements NucleusResponseInterface
 {
     protected int $status = 200;
     protected array $headers = [];

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Nucleus;
 
+use Nucleus\Contracts\Http\NucleusResponseInterface;
 use Nucleus\Http\Request;
 use Nucleus\Http\Response;
 use Nucleus\Routing\Router;
 use Nucleus\Routing\RouteResolver;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Nucleus
 {
@@ -22,7 +24,7 @@ class Nucleus
         $this->middlewares = $middlewares;
     }
 
-    public function handle(Request $request): Response
+    public function handle(ServerRequestInterface $request): NucleusResponseInterface
     {
         // Dispatch route to get matched route object
         $route = $this->router->dispatch($request);
@@ -40,7 +42,6 @@ class Nucleus
             fn($next, $middleware) => fn($req) => (new $middleware())->handle($req, $next),
             fn($req) => RouteResolver::resolve($route->action, $req, $route->params)
         );
-
 
         // Run the pipeline starting with the request
         return $pipeline($request);

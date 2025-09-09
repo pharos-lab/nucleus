@@ -2,11 +2,11 @@
 
 namespace Nucleus\Http;
 
-use Psr\Http\Message\ServerRequestInterface;
+use Nucleus\Contracts\Http\NucleusRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Message\StreamInterface;
 
-class Request implements ServerRequestInterface
+class Request implements NucleusRequestInterface
 {
     protected string $method;
     protected UriInterface $uri;
@@ -158,4 +158,25 @@ class Request implements ServerRequestInterface
     public function getAttribute($name, $default = null) { return $this->attributes[$name] ?? $default; }
     public function withAttribute($name, $value): static { $new = clone $this; $new->attributes[$name] = $value; return $new; }
     public function withoutAttribute($name): static { $new = clone $this; unset($new->attributes[$name]); return $new; }
+
+    //helpers
+    public function query(string $key, $default = null)
+    {
+        return $this->queryParams[$key] ?? $default;
+    }
+
+    public function input(string $key, $default = null)
+    {
+        return $this->parsedBody[$key] ?? $default;
+    }
+
+    public function allQuery(): array
+    {
+        return $this->queryParams;
+    }
+
+    public function allInput(): array
+    {
+        return $this->parsedBody;
+    }
 }

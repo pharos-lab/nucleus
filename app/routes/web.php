@@ -8,8 +8,8 @@ use Nucleus\Http\Response;
 $router->get('/home', [TestController::class, 'index']);
 $router->get('/api', [TestController::class, 'api']);
 
-$router->get('/{id}', function () {
-    return 'Hello world from Nucleus 🚀';
+$router->get('/{id}', function ($id) {
+    return 'Hello world from Nucleus 🚀' . $id;
 })->middleware([App\Middleware\RouteMiddleware::class])
 ->where(['id' => '[0-9]+']);
 
