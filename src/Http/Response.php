@@ -1,111 +1,78 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Nucleus\Http;
 
-use Nucleus\View\View;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
-class Response
+class Response implements ResponseInterface
 {
-    protected string $content;
     protected int $status = 200;
     protected array $headers = [];
+    protected StreamInterface $body;
+    protected string $protocol = '1.1';
 
     public function __construct(string $content = '', int $status = 200, array $headers = [])
     {
-        $this->content = $content;
+        $this->body = new Stream($content);
         $this->status = $status;
         $this->headers = $headers;
     }
 
-    /**
-     * Send the response to the browser
-     */
+    public function getStatusCode(): int { return $this->status; }
+    public function withStatus($code, $reasonPhrase = ''): static
+    {
+        $new = clone $this;
+        $new->status = $code;
+        return $new;
+    }
+
+    public function getReasonPhrase(): string { return ''; }
+    public function getProtocolVersion(): string { return $this->protocol; }
+    public function withProtocolVersion($version): static { $new = clone $this; $new->protocol = $version; return $new; }
+    public function getHeaders(): array { return $this->headers; }
+    public function hasHeader($name): bool { return isset($this->headers[$name]); }
+    public function getHeader($name): array { return $this->headers[$name] ?? []; }
+    public function getHeaderLine($name): string { return implode(', ', $this->getHeader($name)); }
+    public function withHeader($name, $value): static { $new = clone $this; $new->headers[$name] = (array)$value; return $new; }
+    public function withAddedHeader($name, $value): static { $new = clone $this; $new->headers[$name] = array_merge($new->headers[$name] ?? [], (array)$value); return $new; }
+    public function withoutHeader($name): static { $new = clone $this; unset($new->headers[$name]); return $new; }
+    public function getBody(): StreamInterface { return $this->body; }
+    public function withBody(StreamInterface $body): static { $new = clone $this; $new->body = $body; return $new; }
+
+    // Helpers
+    public static function make(string $content, int $status = 200, array $headers = []): static
+    {
+        return new static($content, $status, $headers);
+    }
+    public static function json(array $data, int $status = 200): static
+    {
+        return new static(json_encode($data), $status, ['Content-Type' => 'application/json']);
+    }
+    public static function notFound(): static
+    {
+        return static::make('Not Found', 404);
+    }
+
     public function send(): void
     {
         http_response_code($this->status);
 
         foreach ($this->headers as $name => $value) {
-            header("$name: $value");
+            if (is_array($value)) {
+                foreach ($value as $v) {
+                    header("$name: $v", false);
+                }
+            } else {
+                header("$name: $value", true);
+            }
         }
 
-        echo $this->content;
-        return;
-    }
-
-    /**
-     * Create response statically
-     */
-    public static function make(string $content, int $status = 200, array $headers = []): self
-    {
-        return new self($content, $status, $headers);
-    }
-
-    public static function json(array $data, int $status = 200): self
-    {
-        return new self(json_encode($data), $status, ['Content-Type' => 'application/json']);
-    }
-
-    public static function notFound(): self
-    {
-        return View::make('errors.404')->status(404);
-    }
-
-    /**
-     * Set HTTP status code
-     */
-    public function status(int $code): self
-    {
-        $this->status = $code;
-        return $this;
-    }
-
-    /**
-     * Get HTTP status code
-     */
-    public function getStatusCode(): int
-    {
-        return $this->status;
-    }
-
-    /**
-     * Set response body
-     */
-    public function setBody(string $content): self
-    {
-        $this->content = $content;
-        return $this;
-    }
-
-    /**
-     * Get response body
-     */
-    public function getBody(): string
-    {
-        return $this->content;
-    }
-
-    /**
-     * Set a header
-     */
-    public function setHeader(string $name, string $value): self
-    {
-        $this->headers[$name] = $value;
-        return $this;
-    }
-
-    /**
-     * Get a header value
-     */
-    public function getHeader(string $name): ?string
-    {
-        return $this->headers[$name] ?? null;
-    }
-
-    public function __toString(): string
-    {
-        return $this->content;
+        if ($this->body instanceof \Psr\Http\Message\StreamInterface) {
+            echo (string) $this->body;
+        } else {
+            echo $this->body;
+        }
     }
 
 }

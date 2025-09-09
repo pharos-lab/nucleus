@@ -51,7 +51,7 @@ class Application
 
     public function run(): void
     {
-        $request = new Request();
+        $request = Request::capture();
 
         // Create kernel using router + middlewares
         $kernel = new Nucleus($this->router, $this->middlewares);
