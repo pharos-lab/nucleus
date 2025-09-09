@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Nucleus\Routing;
 
 use Nucleus\Contracts\RouterInterface;
-use Nucleus\Http\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Router implements RouterInterface
 {
@@ -35,18 +35,22 @@ class Router implements RouterInterface
     }
 
     /**
-     * Dispatch request to matching route
+     * Dispatch PSR-7 request to matching route
      */
-    public function dispatch(Request $request): ?Route
+    public function dispatch(ServerRequestInterface $request): ?Route
     {
-        $method = $request->getMethod();
-        $path = $request->getPath();
+        $method = strtoupper($request->getMethod());
+        $path = $request->getUri()->getPath();
 
         foreach ($this->getRoutesForMethod($method) as $route) {
-            if (!$this->match($route, $path)) continue;
+            if (!$this->match($route, $path)) {
+                continue;
+            }
 
             $params = $this->extractParams($route, $path);
-            if (!$this->validateConstraints($route, $params)) continue;
+            if (!$this->validateConstraints($route, $params)) {
+                continue;
+            }
 
             $route->params = $params;
             return $route;
@@ -55,37 +59,24 @@ class Router implements RouterInterface
         return null;
     }
 
-    /**
-     * Get all routes for a specific HTTP method
-     */
     protected function getRoutesForMethod(string $method): array
     {
         return $this->routes[$method] ?? [];
     }
 
-    /**
-     * Check if route pattern matches request path
-     */
     protected function match(Route $route, string $path): bool
     {
         $pattern = $this->getRegexFromPath($route->path);
         return preg_match($pattern, $path) === 1;
     }
 
-    /**
-     * Extract named parameters from path
-     */
     protected function extractParams(Route $route, string $path): array
     {
         $pattern = $this->getRegexFromPath($route->path);
-
         preg_match($pattern, $path, $matches);
         return array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
     }
 
-    /**
-     * Validate route parameter constraints
-     */
     protected function validateConstraints(Route $route, array $params): bool
     {
         foreach ($route->constraints as $param => $regex) {
@@ -96,9 +87,6 @@ class Router implements RouterInterface
         return true;
     }
 
-    /**
-     * Convert route path with {param} to regex
-     */
     protected function getRegexFromPath(string $path): string
     {
         $pattern = preg_replace('#\{(\w+)\}#', '(?P<$1>[^/]+)', $path);
