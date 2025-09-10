@@ -2,7 +2,8 @@
 
 namespace Tests\Unit;
 
-use Nucleus\Nucleus;
+use Nucleus\Core\Application;
+use Nucleus\Core\Nucleus;
 use Nucleus\Routing\Router;
 use Nucleus\Routing\Route;
 use Nucleus\Http\Response;
@@ -15,51 +16,47 @@ use Tests\Fakes\FakeControllerAction;
 
 class NucleusTest extends TestCase
 {
-    protected Router $router;
-    protected array $globalMiddlewares;
+    protected Application $app;
 
     protected function setUp(): void
     {
-        $this->router = new Router();
-        $this->globalMiddlewares = [
-            FakeGlobalMiddleware::class,
-        ];
-        View::setBasePath(__DIR__ . '/../Fakes');
+        $this->app = new Application(__DIR__ . '/../Fakes');
     }
 
     public function testRouteWithoutMiddlewareReturnsControllerResponse(): void
     {
-        $route = $this->router->get('/test', new FakeControllerAction());
+        $this->app->getRouter()->get('/test', new FakeControllerAction());
         $request = new FakeRequest('/test', 'GET');
 
-        $kernel = new Nucleus($this->router, $this->globalMiddlewares);
+        $kernel = new Nucleus($this->app);
         $response = $kernel->handle($request);
 
         $this->assertInstanceOf(Response::class, $response);
-        $this->assertEquals('original', $response->getBody());
-        $this->assertEquals('true', $response->getHeader('X-Global'));
+        $this->assertEquals('original', (string) $response->getBody());
+        $this->assertEquals('true', $response->getHeaderLine('X-Global'));
     }
 
     public function testRouteWithRouteMiddlewareExecutesPipeline(): void
     {
-        $route = $this->router->get('/test', new FakeControllerAction())
+        $route = $this->app->getRouter()->get('/test', new FakeControllerAction())
             ->middleware([FakeRouteMiddleware::class]);
 
         $request = new FakeRequest('/test', 'GET');
 
-        $kernel = new Nucleus($this->router, $this->globalMiddlewares);
+        $kernel = new Nucleus($this->app);
         $response = $kernel->handle($request);
 
-        $this->assertEquals('modified', $response->getBody());
-        $this->assertEquals('true', $response->getHeader('X-Global'));
+        $this->assertEquals('modified', (string) $response->getBody());
+        $this->assertEquals('true', $response->getHeaderLine('X-Global'));
+        $this->assertEquals('true', $response->getHeaderLine('X-Route'));
     }
 
     public function testNonMatchingRouteReturnsNotFound(): void
     {
-        $this->router->get('/existing', new FakeControllerAction());
+        $this->app->getRouter()->get('/existing', new FakeControllerAction());
         $request = new FakeRequest('/unknown', 'GET');
 
-        $kernel = new Nucleus($this->router, $this->globalMiddlewares);
+        $kernel = new Nucleus($this->app);
         $response = $kernel->handle($request);
 
         $this->assertEquals(404, $response->getStatusCode());
@@ -67,12 +64,12 @@ class NucleusTest extends TestCase
 
     public function testRouteParamsArePassedToController(): void
     {
-        $this->router->get('/user/{id}', fn($id) => $id);
+        $this->app->getRouter()->get('/user/{id}', fn($id) => $id);
         $request = new FakeRequest('/user/42', 'GET');
 
-        $kernel = new Nucleus($this->router, $this->globalMiddlewares);
+        $kernel = new Nucleus($this->app);
         $response = $kernel->handle($request);
 
-        $this->assertEquals('42', $response->getBody());
+        $this->assertEquals('42', (string) $response->getBody());
     }
 }

@@ -12,17 +12,21 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class Nucleus
 {
+    protected Application $app;
     protected Router $router;
     protected RouteResolver $resolver;
 
     /** @var array<string> Global middleware list */
     protected array $middlewares = [];
 
-    public function __construct(Router $router, array $middlewares = [])
+    public function __construct(Application $app)
     {
-        $this->router = $router;
-        $this->middlewares = $middlewares;
+        $this->app = $app;
+        $this->router = $app->getRouter();
+        $this->middlewares = $app->getGlobalMiddlewares();
     }
+
+
 
     public function handle(ServerRequestInterface $request): NucleusResponseInterface
     {

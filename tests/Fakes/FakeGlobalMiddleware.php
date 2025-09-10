@@ -11,7 +11,6 @@ class FakeGlobalMiddleware implements MiddlewareInterface
     public function handle(Request $request, $next): Response
     {
         $response = $next($request);
-        $response->setHeader('X-Global', 'true');
-        return $response;
+        return $response->withHeader('X-Global', 'true');
     }
 }

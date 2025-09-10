@@ -64,7 +64,7 @@ class Application
         $request = $this->container->make(Request::class);
 
         // Create kernel with router, resolver and middlewares
-        $kernel = new Nucleus($this->router, $this->middlewares);
+        $kernel = new Nucleus($this);
 
         // Handle request
         $response = $kernel->handle($request);
@@ -76,5 +76,15 @@ class Application
     public function getContainer(): Container
     {
         return $this->container;
+    }
+
+    public function getRouter(): Router
+    {
+        return $this->router;
+    }
+
+    public function getGlobalMiddlewares(): array
+    {
+        return $this->middlewares;
     }
 }
