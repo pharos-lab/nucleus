@@ -3,8 +3,8 @@
 namespace Tests\Unit;
 
 use Nucleus\Http\Response;
-use Nucleus\Nucleus;
-use Nucleus\Routing\Router;
+use Nucleus\Core\Application;
+use Nucleus\Core\Nucleus;
 use PHPUnit\Framework\TestCase;
 use Tests\Fakes\FakeMiddlewareOne;
 use Tests\Fakes\FakeMiddlewareTwo;
@@ -12,38 +12,37 @@ use Tests\Fakes\FakeRequest;
 
 class NucleusMiddlewarePipelineTest extends TestCase
 {
-    protected Router $router;
+    protected Application $app;
 
     protected function setUp(): void
     {
-        $this->router = new Router();
+        // Application pointe vers les fakes
+        $this->app = new Application(__DIR__ . '/../Fakes');
     }
 
     public function testMultipleMiddlewaresPipeline(): void
     {
         // Route avec plusieurs middlewares
-        $route = $this->router->get('/test', fn() => 'ok')
+        $this->app->getRouter()->get('/test', fn() => 'ok')
             ->middleware([FakeMiddlewareOne::class, FakeMiddlewareTwo::class]);
 
-        $kernel = new Nucleus($this->router);
-
+        $kernel = new Nucleus($this->app);
         $request = new FakeRequest('/test', 'GET');
 
         $response = $kernel->handle($request);
 
         $this->assertInstanceOf(Response::class, $response);
 
-        // Vérifier que chaque middleware a modifié la requête ou ajouté son effet
-        $body = $response->getBody();
+        $body = (string) $response->getBody();
 
-        // FakeMiddlewareOne ajoute "[one]" et FakeMiddlewareTwo ajoute "[two]"
+        // Vérifie l’effet de chaque middleware
         $this->assertStringContainsString('[one]', $body);
         $this->assertStringContainsString('[two]', $body);
 
-        // Vérifier que le corps final contient la réponse de l'action
+        // Vérifie la réponse finale
         $this->assertStringContainsString('ok', $body);
 
-        // Vérifier l’ordre : [one][two]ok
+        // Vérifie l’ordre exact
         $this->assertEquals('[one][two]ok', $body);
     }
 }
