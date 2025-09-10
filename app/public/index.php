@@ -2,7 +2,7 @@
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-use Nucleus\Application;
+use Nucleus\Core\Application;
 
 $app = new Application(dirname(__DIR__));
 

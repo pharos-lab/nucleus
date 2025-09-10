@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nucleus;
+namespace Nucleus\Core;
 
 use Nucleus\Contracts\Http\NucleusResponseInterface;
 use Nucleus\Http\Response;

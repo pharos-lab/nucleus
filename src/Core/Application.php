@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Nucleus;
+namespace Nucleus\Core;
 
 use Nucleus\Container\Container;
+use Nucleus\Core\Bootstrap\NucleusProvider;
 use Nucleus\Http\Request;
 use Nucleus\Routing\Router;
-use Nucleus\Routing\RouteResolver;
-use Nucleus\View\View;
 
 class Application
 {
@@ -41,19 +40,8 @@ class Application
 
     protected function registerCoreBindings(): void
     {
-        // Route resolver with container
-        $this->container->bind(RouteResolver::class, fn($c) => new RouteResolver($c));
-
-        // Router
-        $this->container->bind(Router::class, fn($c) => new Router(
-            $c->make(RouteResolver::class)
-        ));
-
-        // View service (instance, no more static)
-        $this->container->bind(View::class, fn() => new View($this->basePath));
-
-        // Request factory
-        $this->container->bind(Request::class, fn() => Request::capture());
+        $provider = new NucleusProvider($this->container, $this->basePath);
+        $provider->register();
     }
 
     protected function loadRoutes(string $path): void
