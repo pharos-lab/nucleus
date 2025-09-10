@@ -4,29 +4,29 @@ namespace Tests\Unit;
 
 use Nucleus\Routing\RouteResolver;
 use Nucleus\Http\Response;
-use Nucleus\Container\Container;
-use Nucleus\View\View;
+use Nucleus\Core\Application;
 use PHPUnit\Framework\TestCase;
 use Tests\Fakes\FakeRequest;
 
 class RouteResolverTest extends TestCase
 {
+    protected Application $app;
+
     protected function setUp(): void
     {
-        // Container minimal pour instancier des classes si besoin
-        $container = new Container();
-        RouteResolver::setContainer($container);
-        View::setBasePath(__DIR__ . '/../Fakes');
+        $this->app =new Application(__DIR__ . '/../Fakes');
     }
+    
 
     public function testResolveCallableReturnsResponse()
     {
         $action = fn($request) => 'ok';
         $request = new FakeRequest('/test', 'GET');
 
-        $response = RouteResolver::resolve($action, $request);
+        $response = $this->app->getRouter()->resolve($action, $request);
+
         $this->assertInstanceOf(Response::class, $response);
-        $this->assertStringContainsString('ok', (string)$response);
+        $this->assertStringContainsString('ok', (string) $response->getBody());
     }
 
     public function testResolveInvokableObject()
@@ -41,9 +41,9 @@ class RouteResolverTest extends TestCase
         $request = new FakeRequest('/user/42', 'GET');
         $params = ['id' => 42];
 
-        $response = RouteResolver::resolve($action, $request, $params);
+        $response = $this->app->getRouter()->resolve($action, $request, $params);
         $this->assertInstanceOf(Response::class, $response);
-        $this->assertStringContainsString('42', (string)$response);
+        $this->assertStringContainsString('42', (string) $response->getBody());
     }
 
     public function testResolveControllerAction()
@@ -59,9 +59,9 @@ class RouteResolverTest extends TestCase
         $request = new FakeRequest('/user/7', 'GET');
         $params = ['id' => 7];
 
-        $response = RouteResolver::resolve($action, $request, $params);
+        $response = $this->app->getRouter()->resolve($action, $request, $params);
         $this->assertInstanceOf(Response::class, $response);
-        $this->assertStringContainsString('7', (string)$response);
+        $this->assertStringContainsString('7', (string) $response->getBody());
     }
 
     public function testResolveInvalidActionReturnsNotFound()
@@ -69,7 +69,7 @@ class RouteResolverTest extends TestCase
         $action = 'non_existent_action';
         $request = new FakeRequest('/invalid', 'GET');
 
-        $response = RouteResolver::resolve($action, $request);
+        $response = $this->app->getRouter()->resolve($action, $request);
         $this->assertInstanceOf(Response::class, $response);
         $this->assertEquals(404, $response->getStatusCode());
     }

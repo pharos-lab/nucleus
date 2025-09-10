@@ -2,29 +2,30 @@
 
 namespace Tests\Unit;
 
+use Nucleus\Core\Application;
+use Nucleus\Core\Nucleus;
 use Tests\Fakes\FakeRequest;
 use Nucleus\Http\Response;
-use Nucleus\Nucleus;
 use Nucleus\Routing\Router;
 use PHPUnit\Framework\TestCase;
 use Tests\Fakes\FakeMiddlewareInterrupt;
 
 class NucleusMiddlewareInterruptTest extends TestCase
 {
-    protected Router $router;
+    protected Application $app;
 
     protected function setUp(): void
     {
-        $this->router = new Router();
+        
+        $this->app = new Application(__DIR__ . '/../Fakes');
     }
 
     public function testMiddlewareCanInterruptPipeline(): void
     {
-        // Route avec un middleware qui interrompt
-        $this->router->get('/blocked', fn() => 'ok')
+        $this->app->getRouter()->get('/blocked', fn() => 'ok')
             ->middleware([FakeMiddlewareInterrupt::class]);
 
-        $kernel = new Nucleus($this->router);
+        $kernel = new Nucleus($this->app);
 
         $request = new FakeRequest('/blocked', 'GET');
 
@@ -32,7 +33,7 @@ class NucleusMiddlewareInterruptTest extends TestCase
 
         $this->assertInstanceOf(Response::class, $response);
 
-        // Le middleware a bloqué la suite, la réponse ne contient pas 'ok'
-        $this->assertEquals('Blocked by middleware', $response->getBody());
+        $body = (string) $response->getBody();
+        $this->assertEquals('Blocked by middleware', $body);
     }
 }

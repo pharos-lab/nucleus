@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use Nucleus\Core\Application;
 use Tests\Fakes\FakeRequest;
 use Nucleus\Routing\Router;
 use Nucleus\Routing\Route;
@@ -13,7 +14,7 @@ class RouterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->router = new Router();
+        $this->router =new Application(__DIR__ . '/../Fakes')->getRouter();
     }
 
     public function testGetRouteRegistersCorrectly(): void

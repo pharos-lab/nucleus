@@ -16,13 +16,11 @@ class NucleusMiddlewarePipelineTest extends TestCase
 
     protected function setUp(): void
     {
-        // Application pointe vers les fakes
         $this->app = new Application(__DIR__ . '/../Fakes');
     }
 
     public function testMultipleMiddlewaresPipeline(): void
     {
-        // Route avec plusieurs middlewares
         $this->app->getRouter()->get('/test', fn() => 'ok')
             ->middleware([FakeMiddlewareOne::class, FakeMiddlewareTwo::class]);
 
@@ -35,14 +33,11 @@ class NucleusMiddlewarePipelineTest extends TestCase
 
         $body = (string) $response->getBody();
 
-        // Vérifie l’effet de chaque middleware
         $this->assertStringContainsString('[one]', $body);
         $this->assertStringContainsString('[two]', $body);
 
-        // Vérifie la réponse finale
         $this->assertStringContainsString('ok', $body);
 
-        // Vérifie l’ordre exact
         $this->assertEquals('[one][two]ok', $body);
     }
 }
