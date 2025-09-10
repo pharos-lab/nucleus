@@ -9,9 +9,16 @@ use Nucleus\View\View;
 
 abstract class BaseController
 {
-    protected function view(string $view, array $data = []): response
+    protected View $view;
+
+    public function __construct(View $view)
     {
-        return View::make($view, $data);
+        $this->view = $view;
+    }
+
+    protected function view(string $view, array $data = []): Response
+    {
+        return $this->view->make($view, $data);
     }
 
     protected function json(array $data, int $status = 200): Response

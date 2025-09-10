@@ -8,16 +8,16 @@ use Nucleus\Http\Response;
 
 class View
 {
-    protected static string $basePath = '';
+    protected string $basePath;
 
-    public static function setBasePath(string $path): void
+    public function __construct(string $basePath)
     {
-        self::$basePath = rtrim($path, '/');
+        $this->basePath = rtrim($basePath, '/');
     }
 
-    public static function make(string $view, array $data = []): Response
+    public function make(string $view, array $data = []): Response
     {
-        $viewPath = self::$basePath . '/views/' . str_replace('.', '/', $view) . '.php';
+        $viewPath = $this->basePath . '/views/' . str_replace('.', '/', $view) . '.php';
 
         if (!file_exists($viewPath)) {
             throw new \RuntimeException("[NUCLEUS] View [$view] not found at [$viewPath]");
@@ -27,7 +27,7 @@ class View
 
         ob_start();
         include $viewPath;
-        $content =  ob_get_clean();
+        $content = ob_get_clean();
 
         return new Response($content);
     }

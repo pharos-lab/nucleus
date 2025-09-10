@@ -13,6 +13,7 @@ use Psr\Http\Message\ServerRequestInterface;
 class Nucleus
 {
     protected Router $router;
+    protected RouteResolver $resolver;
 
     /** @var array<string> Global middleware list */
     protected array $middlewares = [];
@@ -39,7 +40,7 @@ class Nucleus
         $pipeline = array_reduce(
             array_reverse($middlewares),
             fn($next, $middleware) => fn($req) => (new $middleware())->handle($req, $next),
-            fn($req) => RouteResolver::resolve($route->action, $req, $route->params)
+            fn($req) => $this->router->resolve($route->action, $req, $route->params)
         );
 
         // Run the pipeline starting with the request

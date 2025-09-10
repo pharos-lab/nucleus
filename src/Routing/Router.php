@@ -5,10 +5,18 @@ declare(strict_types=1);
 namespace Nucleus\Routing;
 
 use Nucleus\Contracts\Http\NucleusRequestInterface;
+use Nucleus\Contracts\Http\NucleusResponseInterface;
 use Nucleus\Contracts\RouterInterface;
 
 class Router implements RouterInterface
 {
+    protected RouteResolver $resolver;
+
+    public function __construct(RouteResolver $resolver)
+    {
+        $this->resolver = $resolver;
+    }   
+
     protected array $routes = [
         "GET" => [],
         "POST" => []
@@ -57,6 +65,11 @@ class Router implements RouterInterface
         }
 
         return null;
+    }
+
+    public function resolve($action, NucleusRequestInterface $request, array $params = []): NucleusResponseInterface
+    {
+        return $this->resolver->resolve($action, $request, $params);
     }
 
     protected function getRoutesForMethod(string $method): array

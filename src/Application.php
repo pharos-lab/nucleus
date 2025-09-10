@@ -13,52 +13,80 @@ use Nucleus\View\View;
 class Application
 {
     protected Router $router;
-    protected $config;
+    protected array $config;
     protected string $basePath;
     protected Container $container;
     protected array $middlewares = [];
 
-    public function __construct($basePath)
+    public function __construct(string $basePath)
     {
         $this->basePath = $basePath;
-        $this->router = new Router();
+        $this->container = new Container();
+
         $this->config = file_exists($basePath . '/config/app.php') 
             ? require $basePath . '/config/app.php'
             : [];
 
-        // Load default routes
-        $this->loadRoutes($this->config['routes_path']);
-        View::setBasePath($basePath);
-        
-        $this->container = new Container();
-        RouteResolver::setContainer($this->container);
+        // Register core services in the container
+        $this->registerCoreBindings();
 
-        // Load global middlewares from config if exists
-        $middlewareConfig = $basePath . '/config/middleware.php';
-        $this->middlewares = file_exists($middlewareConfig)
-            ? require $middlewareConfig
-            : [];
-            var_dump($this->middlewares); // --- IGNORE ---
+        $this->router = $this->container->make(Router::class);
+
+        // Load routes
+        $this->loadRoutes($this->config['routes_path'] ?? $basePath . '/routes/web.php');
+
+        // Load global middlewares
+        $this->middlewares = $this->loadGlobalMiddlewares();
+    }
+
+    protected function registerCoreBindings(): void
+    {
+        // Route resolver with container
+        $this->container->bind(RouteResolver::class, fn($c) => new RouteResolver($c));
+
+        // Router
+        $this->container->bind(Router::class, fn($c) => new Router(
+            $c->make(RouteResolver::class)
+        ));
+
+        // View service (instance, no more static)
+        $this->container->bind(View::class, fn() => new View($this->basePath));
+
+        // Request factory
+        $this->container->bind(Request::class, fn() => Request::capture());
     }
 
     protected function loadRoutes(string $path): void
     {
         if (file_exists($path)) {
-            $router = $this->router;
+            $router = $this->router; // extracted for `require` scope
             require $path;
         }
     }
 
+    protected function loadGlobalMiddlewares(): array
+    {
+        $middlewareConfig = $this->basePath . '/config/middleware.php';
+        return file_exists($middlewareConfig) ? require $middlewareConfig : [];
+    }
+
     public function run(): void
     {
-        $request = Request::capture();
+        // Resolve request from container
+        $request = $this->container->make(Request::class);
 
-        // Create kernel using router + middlewares
+        // Create kernel with router, resolver and middlewares
         $kernel = new Nucleus($this->router, $this->middlewares);
 
-        // Handle request through middleware pipeline
+        // Handle request
         $response = $kernel->handle($request);
 
+        // Send response
         $response->send();
+    }
+
+    public function getContainer(): Container
+    {
+        return $this->container;
     }
 }
