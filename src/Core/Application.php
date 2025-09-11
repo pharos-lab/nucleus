@@ -12,7 +12,7 @@ use Nucleus\Routing\Router;
 class Application
 {
     protected Router $router;
-    protected array $config;
+    protected array $config = [];
     protected string $basePath;
     protected Container $container;
     protected array $middlewares = [];
@@ -21,38 +21,60 @@ class Application
     {
         $this->basePath = $basePath;
         $this->container = new Container();
+        
+        $this->bootstrap();
+    }
 
-        $this->config = file_exists($basePath . '/config/app.php') 
-            ? require $basePath . '/config/app.php'
-            : [];
-
-        // Register core services in the container
+    public function bootstrap(): void
+    {
+        $this->loadConfig();
         $this->registerCoreBindings();
+        $this->registerUserBindings();
 
         $this->router = $this->container->make(Router::class);
 
-        // Load routes
-        $this->loadRoutes($this->config['routes_path'] ?? $basePath . '/routes/web.php');
+        $this->registerRoutes();
+        $this->middlewares = $this->registerGlobalMiddlewares();
+    }
 
-        // Load global middlewares
-        $this->middlewares = $this->loadGlobalMiddlewares();
+    protected function loadConfig(): void
+    {
+        $configFile = $this->basePath . '/config/app.php';
+        $this->config = file_exists($configFile) ? require $configFile : [];
     }
 
     protected function registerCoreBindings(): void
     {
-        $provider = new NucleusProvider($this->container, $this->basePath);
+        $provider = new NucleusProvider($this);
         $provider->register();
     }
 
-    protected function loadRoutes(string $path): void
+    protected function registerUserBindings(): void
     {
-        if (file_exists($path)) {
-            $router = $this->router; // extracted for `require` scope
-            require $path;
+        $providers = $this->config['providers'] ?? [];
+
+        foreach ($providers as $providerClass) {
+            if (!class_exists($providerClass)) {
+                continue; // provider inexistant → on ignore
+            }
+
+            $provider = new $providerClass($this);
+
+            $provider->register();
         }
     }
 
-    protected function loadGlobalMiddlewares(): array
+    protected function registerRoutes(): void
+    {
+        $routesPath = $this->config['routes_path'] ?? $this->basePath . '/routes/web.php';
+
+        if (file_exists($routesPath)) {
+            $router = $this->router; // disponible dans la closure require
+            require $routesPath;
+        }
+    }
+
+    protected function registerGlobalMiddlewares(): array
     {
         $middlewareConfig = $this->basePath . '/config/middleware.php';
         return file_exists($middlewareConfig) ? require $middlewareConfig : [];
@@ -60,19 +82,14 @@ class Application
 
     public function run(): void
     {
-        // Resolve request from container
         $request = $this->container->make(Request::class);
-
-        // Create kernel with router, resolver and middlewares
         $kernel = new Nucleus($this);
-
-        // Handle request
         $response = $kernel->handle($request);
 
-        // Send response
         $response->send();
     }
 
+    // --- getters ---
     public function getContainer(): Container
     {
         return $this->container;
@@ -86,5 +103,15 @@ class Application
     public function getGlobalMiddlewares(): array
     {
         return $this->middlewares;
+    }
+
+    public function getConfig(): array
+    {
+        return $this->config;
+    }
+
+    public function getBasePath(): string
+    {
+        return $this->basePath;
     }
 }

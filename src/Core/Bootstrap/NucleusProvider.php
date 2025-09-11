@@ -4,22 +4,13 @@ declare(strict_types=1);
 
 namespace Nucleus\Core\Bootstrap;
 
-use Nucleus\Container\Container;
 use Nucleus\Routing\Router;
 use Nucleus\Routing\RouteResolver;
 use Nucleus\View\View;
 use Nucleus\Http\Request;
 
-class NucleusProvider
+class NucleusProvider extends Provider
 {
-    protected Container $container;
-    protected string $basePath;
-
-    public function __construct(Container $container, string $basePath)
-    {
-        $this->container = $container;
-        $this->basePath = $basePath;
-    }
 
     public function register(): void
     {

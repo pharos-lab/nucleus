@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use Nucleus\Routing\RouteResolver;
 use Nucleus\Http\Response;
 use Nucleus\Core\Application;
 use PHPUnit\Framework\TestCase;

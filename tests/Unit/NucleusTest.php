@@ -4,13 +4,9 @@ namespace Tests\Unit;
 
 use Nucleus\Core\Application;
 use Nucleus\Core\Nucleus;
-use Nucleus\Routing\Router;
-use Nucleus\Routing\Route;
 use Nucleus\Http\Response;
-use Nucleus\View\View;
 use PHPUnit\Framework\TestCase;
 use Tests\Fakes\FakeRequest;
-use Tests\Fakes\FakeGlobalMiddleware;
 use Tests\Fakes\FakeRouteMiddleware;
 use Tests\Fakes\FakeControllerAction;
 

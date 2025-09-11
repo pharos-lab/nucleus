@@ -45,4 +45,18 @@ class Container implements ContainerInterface
 
         return $ref->newInstanceArgs($params);
     }
+
+    public function has(string $abstract): bool
+    {
+        return isset($this->bindings[$abstract]);
+    }
+
+    public function get(string $abstract)
+    {
+        if ($this->has($abstract)) {
+            return $this->make($abstract);
+        }
+
+        throw new \Exception("Service {$abstract} not found in container.");
+    }
 }

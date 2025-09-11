@@ -20,6 +20,7 @@ class Response implements NucleusResponseInterface
     }
 
     public function getStatusCode(): int { return $this->status; }
+
     public function withStatus($code, $reasonPhrase = ''): static
     {
         $new = clone $this;
@@ -27,17 +28,41 @@ class Response implements NucleusResponseInterface
         return $new;
     }
 
-    public function getReasonPhrase(): string { return ''; }
+    public function getReasonPhrase(): string { 
+        $phrases = [
+            200 => 'OK',
+            201 => 'Created',
+            204 => 'No Content',
+            400 => 'Bad Request',
+            401 => 'Unauthorized',
+            403 => 'Forbidden',
+            404 => 'Not Found',
+            500 => 'Internal Server Error',
+        ];
+
+        return $phrases[$this->status] ?? ''; 
+    }
+
     public function getProtocolVersion(): string { return $this->protocol; }
+
     public function withProtocolVersion($version): static { $new = clone $this; $new->protocol = $version; return $new; }
+
     public function getHeaders(): array { return $this->headers; }
+
     public function hasHeader($name): bool { return isset($this->headers[$name]); }
+
     public function getHeader($name): array { return $this->headers[$name] ?? []; }
+
     public function getHeaderLine($name): string { return implode(', ', $this->getHeader($name)); }
+
     public function withHeader($name, $value): static { $new = clone $this; $new->headers[$name] = (array)$value; return $new; }
+
     public function withAddedHeader($name, $value): static { $new = clone $this; $new->headers[$name] = array_merge($new->headers[$name] ?? [], (array)$value); return $new; }
+
     public function withoutHeader($name): static { $new = clone $this; unset($new->headers[$name]); return $new; }
+
     public function getBody(): StreamInterface { return $this->body; }
+
     public function withBody(StreamInterface $body): static { $new = clone $this; $new->body = $body; return $new; }
 
     // Helpers
@@ -73,6 +98,11 @@ class Response implements NucleusResponseInterface
         } else {
             echo $this->body;
         }
+    }
+
+    public static function redirect(string $url, int $status = 302): static
+    {
+        return new static('', $status, ['Location' => $url]);
     }
 
 }
