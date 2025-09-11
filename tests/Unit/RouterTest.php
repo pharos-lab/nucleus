@@ -62,7 +62,7 @@ class RouterTest extends TestCase
 
     public function testConstraintsAreValidated(): void
     {
-        $this->router->get('/user/{id}', fn() => 'ok')->where(['id' => '\d+']);
+        $this->router->get('/user/{id}', fn() => 'ok')->where(['id' => '#[0-9]+#']);
 
         $requestValid = new FakeRequest('/user/123', 'GET');
         $requestInvalid = new FakeRequest('/user/abc', 'GET');
