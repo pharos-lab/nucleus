@@ -137,7 +137,7 @@ class Request implements NucleusRequestInterface
     {
         $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
         $uri    = new Uri($_SERVER['REQUEST_URI'] ?? '/');
-        $headers = getallheaders() ?: [];
+        $headers = [];
         $query = $_GET;
         $post  = $_POST;
 
