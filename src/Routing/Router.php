@@ -110,40 +110,67 @@ class Router implements RouterInterface
 
     public function routeUrl(string $name, array $params = []): string
     {
+        $route = $this->findRouteByName($name);
+
+        $this->validateRouteParameters($route, $params);
+
+        return $this->buildUrlFromRoute($route, $params);
+    }
+
+    /**
+     * Find a route by its name.
+     *
+     * @throws RouteNamedNotFindException
+     */
+    protected function findRouteByName(string $name): Route
+    {
         foreach ($this->routes as $methodRoutes) {
             foreach ($methodRoutes as $route) {
                 if ($route->name === $name) {
-                    $url = $route->path;
-
-                    // Extract expected parameters from route path
-                    preg_match_all('#\{(\w+)\}#', $url, $matches);
-                    $expectedParams = $matches[1];
-
-                    // Check for missing parameters
-                    $missing = array_diff($expectedParams, array_keys($params));
-                    if (!empty($missing)) {
-                        throw new RouteNamedParametersException(
-                            "Missing parameters for route '{$name}': " . implode(', ', $missing)
-                        );
-                    }
-
-                    // Check for extra parameters
-                    $extra = array_diff(array_keys($params), $expectedParams);
-                    if (!empty($extra)) {
-                        throw new RouteNamedParametersException(
-                            "Extra parameters provided for route '{$name}': " . implode(', ', $extra)
-                        );
-                    }
-
-                    // Replace placeholders with actual values
-                    foreach ($params as $key => $value) {
-                        $url = str_replace("{" . $key . "}", (string)$value, $url);
-                    }
-
-                    return $url;
+                    return $route;
                 }
             }
         }
+
         throw new RouteNamedNotFindException("Route with name '{$name}' not found.");
+    }
+
+    /**
+     * Validate provided parameters against expected placeholders.
+     *
+     * @throws RouteNamedParametersException
+     */
+    protected function validateRouteParameters(Route $route, array $params): void
+    {
+        preg_match_all('#\{(\w+)\}#', $route->path, $matches);
+        $expectedParams = $matches[1];
+
+        // Missing parameters
+        $missing = array_diff($expectedParams, array_keys($params));
+        if ($missing) {
+            throw new RouteNamedParametersException(
+                "Missing parameters for route '{$route->name}': " . implode(', ', $missing)
+            );
+        }
+
+        // Extra parameters
+        $extra = array_diff(array_keys($params), $expectedParams);
+        if ($extra) {
+            throw new RouteNamedParametersException(
+                "Extra parameters provided for route '{$route->name}': " . implode(', ', $extra)
+            );
+        }
+    }
+
+    /**
+     * Replace placeholders in the route path with actual values.
+     */
+    protected function buildUrlFromRoute(Route $route, array $params): string
+    {
+        $url = $route->path;
+        foreach ($params as $key => $value) {
+            $url = str_replace("{" . $key . "}", (string)$value, $url);
+        }
+        return $url;
     }
 }
