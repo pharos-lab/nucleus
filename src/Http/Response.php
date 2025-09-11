@@ -104,5 +104,4 @@ class Response implements NucleusResponseInterface
     {
         return new static('', $status, ['Location' => $url]);
     }
-
 }

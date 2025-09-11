@@ -7,6 +7,8 @@ namespace Nucleus\Routing;
 use Nucleus\Contracts\Http\NucleusRequestInterface;
 use Nucleus\Contracts\Http\NucleusResponseInterface;
 use Nucleus\Contracts\RouterInterface;
+use Nucleus\Exceptions\RouteNamedNotFindException;
+use Nucleus\Exceptions\RouteNamedParametersException;
 
 class Router implements RouterInterface
 {
@@ -104,5 +106,44 @@ class Router implements RouterInterface
     {
         $pattern = preg_replace('#\{(\w+)\}#', '(?P<$1>[^/]+)', $path);
         return '#^' . $pattern . '$#';
+    }
+
+    public function routeUrl(string $name, array $params = []): string
+    {
+        foreach ($this->routes as $methodRoutes) {
+            foreach ($methodRoutes as $route) {
+                if ($route->name === $name) {
+                    $url = $route->path;
+
+                    // Extract expected parameters from route path
+                    preg_match_all('#\{(\w+)\}#', $url, $matches);
+                    $expectedParams = $matches[1];
+
+                    // Check for missing parameters
+                    $missing = array_diff($expectedParams, array_keys($params));
+                    if (!empty($missing)) {
+                        throw new RouteNamedParametersException(
+                            "Missing parameters for route '{$name}': " . implode(', ', $missing)
+                        );
+                    }
+
+                    // Check for extra parameters
+                    $extra = array_diff(array_keys($params), $expectedParams);
+                    if (!empty($extra)) {
+                        throw new RouteNamedParametersException(
+                            "Extra parameters provided for route '{$name}': " . implode(', ', $extra)
+                        );
+                    }
+
+                    // Replace placeholders with actual values
+                    foreach ($params as $key => $value) {
+                        $url = str_replace("{" . $key . "}", (string)$value, $url);
+                    }
+
+                    return $url;
+                }
+            }
+        }
+        throw new RouteNamedNotFindException("Route with name '{$name}' not found.");
     }
 }
