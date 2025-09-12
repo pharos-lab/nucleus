@@ -1,6 +1,5 @@
 <?php
 
-use Tests\Fakes\FakeNoResgisterProvider;
 use Tests\Fakes\FakeUserProvider;
 
 return [
