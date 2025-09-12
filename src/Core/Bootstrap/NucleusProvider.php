@@ -9,9 +9,22 @@ use Nucleus\Routing\RouteResolver;
 use Nucleus\View\View;
 use Nucleus\Http\Request;
 
+/**
+ * Class NucleusProvider
+ *
+ * Registers the core services of the framework into the container:
+ * - RouteResolver
+ * - Router
+ * - View
+ * - Request
+ *
+ * @package Nucleus\Core\Bootstrap
+ */
 class NucleusProvider extends Provider
 {
-
+    /**
+     * Register core services into the container.
+     */
     public function register(): void
     {
         // Route resolver

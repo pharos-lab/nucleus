@@ -6,15 +6,36 @@ namespace Nucleus\Container;
 
 use Nucleus\Contracts\ContainerInterface;
 
+/**
+ * Simple dependency injection container.
+ * Supports binding interfaces or classes to factory closures and automatic resolution of class dependencies.
+ */
 class Container implements ContainerInterface
 {
+    /**
+     * @var array<string, callable> Stores the bindings (abstract => factory)
+     */
     protected array $bindings = [];
 
+    /**
+     * Bind an abstract type (interface or class) to a factory closure.
+     *
+     * @param string $abstract The interface or class name.
+     * @param callable $factory Factory that returns an instance of the abstract.
+     */
     public function bind(string $abstract, callable $factory)
     {
         $this->bindings[$abstract] = $factory;
     }
 
+    /**
+     * Resolve an instance of the given class.
+     * Automatically resolves constructor dependencies recursively.
+     *
+     * @param string $class The class name to resolve.
+     * @return mixed The created instance.
+     * @throws \ReflectionException
+     */
     public function make(string $class)
     {
         if (isset($this->bindings[$class])) {
@@ -29,14 +50,12 @@ class Container implements ContainerInterface
         }
 
         $params = [];
-
         foreach ($constructor->getParameters() as $param) {
             $paramClass = $param->getType()?->getName();
             
             if ($paramClass) {
                 $params[] = $this->make($paramClass);
             } elseif ($param->isDefaultValueAvailable()) {
-                // Si une valeur par défaut existe, on la prend
                 $params[] = $param->getDefaultValue();
             } else {
                 $params[] = null;
@@ -46,11 +65,24 @@ class Container implements ContainerInterface
         return $ref->newInstanceArgs($params);
     }
 
+    /**
+     * Check if a binding exists for the given abstract type.
+     *
+     * @param string $abstract The class or interface name.
+     * @return bool True if a binding exists, false otherwise.
+     */
     public function has(string $abstract): bool
     {
         return isset($this->bindings[$abstract]);
     }
 
+    /**
+     * Get an instance for the given abstract.
+     *
+     * @param string $abstract The class or interface name.
+     * @return mixed The instance.
+     * @throws \Exception If no binding is found.
+     */
     public function get(string $abstract)
     {
         if ($this->has($abstract)) {

@@ -11,17 +11,46 @@ use Nucleus\Http\Response;
 use ReflectionFunction;
 use ReflectionMethod;
 
+/**
+ * Class RouteResolver
+ *
+ * Responsible for resolving and executing a route action into a response.
+ *
+ * Supported action types:
+ *  - Closures or functions
+ *  - Invokable objects
+ *  - Controller actions defined as [ControllerClass::class, 'method']
+ *
+ * This class uses reflection and the service container to automatically
+ * resolve method arguments from:
+ *  - The current request
+ *  - Route parameters
+ *  - Dependencies resolvable via the container
+ *  - Default values (if defined)
+ */
 class RouteResolver
 {
+    /** @var Container The application service container */
     protected Container $container;
 
+    /**
+     * RouteResolver constructor.
+     *
+     * @param Container $container Service container for dependency resolution
+     */
     public function __construct(Container $container)
     {
         $this->container = $container;
     }
 
     /**
-     * Resolve the action and return a Response
+     * Resolve the given action into a response.
+     *
+     * @param mixed                   $action  Route action (callable, controller, etc.)
+     * @param NucleusRequestInterface $request Current request
+     * @param array<string,mixed>     $params  Route parameters
+     *
+     * @return NucleusResponseInterface
      */
     public function resolve($action, NucleusRequestInterface $request, array $params = []): NucleusResponseInterface
     {
@@ -40,16 +69,36 @@ class RouteResolver
             : new Response((string) $result);
     }
 
+    /**
+     * Check if the action is a callable (closure, function, invokable object).
+     *
+     * @param mixed $action
+     * @return bool
+     */
     protected function isCallable($action): bool
     {
         return is_callable($action);
     }
 
+    /**
+     * Check if the action is a controller reference [Class, Method].
+     *
+     * @param mixed $action
+     * @return bool
+     */
     protected function isControllerAction($action): bool
     {
         return is_array($action) && count($action) === 2;
     }
 
+    /**
+     * Resolve a callable action (closure, function, invokable object).
+     *
+     * @param callable                $action
+     * @param NucleusRequestInterface $request
+     * @param array<string,mixed>     $params
+     * @return mixed
+     */
     protected function resolveCallable($action, NucleusRequestInterface $request, array $params)
     {
         // Handle invokable objects
@@ -65,6 +114,14 @@ class RouteResolver
         return $action(...$args);
     }
 
+    /**
+     * Resolve a controller action [ControllerClass::class, 'method'].
+     *
+     * @param array{0: string, 1: string} $action
+     * @param NucleusRequestInterface     $request
+     * @param array<string,mixed>         $params
+     * @return mixed
+     */
     protected function resolveController(array $action, NucleusRequestInterface $request, array $params)
     {
         [$controllerClass, $methodName] = $action;
@@ -77,7 +134,16 @@ class RouteResolver
     }
 
     /**
-     * Resolve method parameters using request, URL params, or container
+     * Resolve method/function arguments using:
+     *  - The current request
+     *  - Route parameters
+     *  - Container-resolved dependencies
+     *  - Default values if available
+     *
+     * @param array<int,\ReflectionParameter> $refParams
+     * @param NucleusRequestInterface         $request
+     * @param array<string,mixed>             $params
+     * @return array<int,mixed>
      */
     protected function resolveArgs(array $refParams, NucleusRequestInterface $request, array $params): array
     {
@@ -87,19 +153,19 @@ class RouteResolver
             $name = $param->getName();
             $type = $param->getType()?->getName();
 
-            // Special injection of Request
+            // Inject request if type-hinted or named "request"
             if ($type === NucleusRequestInterface::class || $name === 'request') {
                 $args[] = $request;
             }
-            // URL parameter
+            // Inject from route parameters
             elseif (isset($params[$name])) {
                 $args[] = $params[$name];
             }
-            // Class resolved via container
+            // Resolve class from container
             elseif ($type && class_exists($type)) {
                 $args[] = $this->container->make($type);
             }
-            // Default value or null
+            // Fallback to default value or null
             else {
                 $args[] = $param->isDefaultValueAvailable()
                     ? $param->getDefaultValue()

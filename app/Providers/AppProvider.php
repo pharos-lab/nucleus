@@ -4,19 +4,10 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use Nucleus\Container\Container;
+use Nucleus\Core\Bootstrap\Provider;
 
-class AppProvider
+class AppProvider extends Provider
 {
-    protected Container $container;
-    protected string $basePath;
-
-    public function __construct(Container $container, string $basePath)
-    {
-        $this->container = $container;
-        $this->basePath = $basePath;
-    }
-
     public function register(): void
     {
         // Route resolver

@@ -3,15 +3,15 @@
 use App\Providers\AppProvider;
 
 return [
-    // Chemin du fichier de routes
+    // Path to the routes file
     'routes_path' => __DIR__ . '/../routes/web.php',
 
+    // List of user-defined service providers
     'providers' => [
-        // Les providers utilisateurs seront listés ici
         AppProvider::class,
     ],
 
-    // Plus tard : on pourra ajouter d'autres options
+    // Other configuration options (future use)
     'env' => 'dev',
     'timezone' => 'UTC',
 ];

@@ -10,22 +10,42 @@ use Nucleus\Contracts\RouterInterface;
 use Nucleus\Exceptions\RouteNamedNotFindException;
 use Nucleus\Exceptions\RouteNamedParametersException;
 
+/**
+ * Router class.
+ *
+ * Responsible for:
+ * - Registering routes (GET/POST)
+ * - Matching incoming requests against defined routes
+ * - Extracting route parameters
+ * - Validating parameter constraints
+ * - Resolving actions
+ * - Generating URLs from named routes
+ */
 class Router implements RouterInterface
 {
+    /** @var RouteResolver The resolver to execute route actions */
     protected RouteResolver $resolver;
 
-    public function __construct(RouteResolver $resolver)
-    {
-        $this->resolver = $resolver;
-    }   
-
+    /** @var array<string, Route[]> Registered routes grouped by HTTP method */
     protected array $routes = [
         "GET" => [],
         "POST" => []
     ];
 
     /**
-     * Register GET route
+     * Create a new Router instance.
+     */
+    public function __construct(RouteResolver $resolver)
+    {
+        $this->resolver = $resolver;
+    }
+
+    /**
+     * Register a GET route.
+     *
+     * @param string $uri    The URI pattern
+     * @param mixed  $action The route handler (closure, controller@method, etc.)
+     * @return Route
      */
     public function get(string $uri, $action): Route
     {
@@ -35,7 +55,11 @@ class Router implements RouterInterface
     }
 
     /**
-     * Register POST route
+     * Register a POST route.
+     *
+     * @param string $uri    The URI pattern
+     * @param mixed  $action The route handler
+     * @return Route
      */
     public function post(string $uri, $action): Route
     {
@@ -45,7 +69,10 @@ class Router implements RouterInterface
     }
 
     /**
-     * Dispatch PSR-7 request to matching route
+     * Dispatch a PSR-7 request and return the matched route.
+     *
+     * @param NucleusRequestInterface $request
+     * @return Route|null Matched route or null if not found
      */
     public function dispatch(NucleusRequestInterface $request): ?Route
     {
@@ -69,22 +96,41 @@ class Router implements RouterInterface
         return null;
     }
 
+    /**
+     * Resolve and execute a route action.
+     */
     public function resolve($action, NucleusRequestInterface $request, array $params = []): NucleusResponseInterface
     {
         return $this->resolver->resolve($action, $request, $params);
     }
 
+    /**
+     * Get all routes for a given HTTP method.
+     *
+     * @return Route[]
+     */
     protected function getRoutesForMethod(string $method): array
     {
         return $this->routes[$method] ?? [];
     }
 
+    /**
+     * Check if the route matches the request path.
+     */
     protected function match(Route $route, string $path): bool
     {
         $pattern = $this->getRegexFromPath($route->path);
         return preg_match($pattern, $path) === 1;
     }
 
+    /**
+     * Extract parameters from the path based on placeholders.
+     *
+     * Example:
+     * Route path: /user/{id}
+     * Request path: /user/42
+     * => ['id' => '42']
+     */
     protected function extractParams(Route $route, string $path): array
     {
         $pattern = $this->getRegexFromPath($route->path);
@@ -92,6 +138,9 @@ class Router implements RouterInterface
         return array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
     }
 
+    /**
+     * Validate route parameter constraints (e.g. {id} must be numeric).
+     */
     protected function validateConstraints(Route $route, array $params): bool
     {
         foreach ($route->constraints as $param => $regex) {
@@ -102,18 +151,30 @@ class Router implements RouterInterface
         return true;
     }
 
+    /**
+     * Convert a route path with placeholders into a regex pattern.
+     *
+     * Example:
+     * /user/{id} => #^/user/(?P<id>[^/]+)$#
+     */
     protected function getRegexFromPath(string $path): string
     {
         $pattern = preg_replace('#\{(\w+)\}#', '(?P<$1>[^/]+)', $path);
         return '#^' . $pattern . '$#';
     }
 
+    /**
+     * Generate a URL from a named route.
+     *
+     * @param string $name   The route name
+     * @param array  $params Parameters to replace in the route path
+     * @throws RouteNamedNotFindException
+     * @throws RouteNamedParametersException
+     */
     public function routeUrl(string $name, array $params = []): string
     {
         $route = $this->findRouteByName($name);
-
         $this->validateRouteParameters($route, $params);
-
         return $this->buildUrlFromRoute($route, $params);
     }
 
