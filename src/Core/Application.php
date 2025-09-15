@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Nucleus\Core;
 
 use Nucleus\Config\Config;
+use Nucleus\Config\Environment;
 use Nucleus\Container\Container;
 use Nucleus\Core\Bootstrap\NucleusProvider;
 use Nucleus\Http\Request;
@@ -84,8 +85,8 @@ class Application
      */
     public function bootstrap(): void
     {
-        // Load environment variables from .env
-        // Environment::load($this->basePath . '/.env');
+        //Load environment variables from .env
+        Environment::load($this->basePath . '/.env');
 
         $this->loadConfig();
         $this->registerCoreBindings();

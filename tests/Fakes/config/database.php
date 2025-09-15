@@ -1,11 +1,13 @@
 <?php
 
+use Nucleus\Config\Environment;
+
 return [
     'connections' => [
         'mysql' => [
-            'host' => '127.0.0.1',
-            'user' => 'root',
-            'password' => '',
-        ]
-    ]
+            'host' => Environment::get('DB_HOST', '127.0.0.1'),
+            'user' => Environment::get('DB_USER', 'root'),
+            'password' => Environment::get('DB_PASS', 'root'),
+        ],
+    ],
 ];

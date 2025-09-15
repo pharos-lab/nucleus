@@ -1,16 +1,15 @@
 <?php
 
 use Tests\Fakes\FakeUserProvider;
+use Nucleus\Config\Environment;
 
 return [
-    // Chemin du fichier de routes
     'routes_path' => __DIR__ . '/../routes/web.php',
 
     'providers' => [
         FakeUserProvider::class,
     ],
 
-    // Plus tard : on pourra ajouter d'autres options
-    'env' => 'dev',
-    'timezone' => 'UTC',
+    'env' => Environment::get('APP_ENV', 'dev'),
+    'timezone' => Environment::get('APP_TIMEZONE', 'UTC'),
 ];
