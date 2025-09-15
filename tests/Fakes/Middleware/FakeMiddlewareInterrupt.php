@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Fakes;
+namespace Tests\Fakes\Middleware;
 
 use Nucleus\Http\Request;
 use Nucleus\Http\Response;
@@ -10,7 +10,8 @@ class FakeMiddlewareInterrupt implements MiddlewareInterface
 {
     public function handle(Request $request, Callable $next): Response
     {
-        // Ne jamais appeler $next
+        MiddlewareLog::add('interupt action before');
+        // Never call the next middleware, interrupting the pipeline
         return new Response('Blocked by middleware', 403);
     }
 }

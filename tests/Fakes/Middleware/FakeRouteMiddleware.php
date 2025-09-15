@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Fakes;
+namespace Tests\Fakes\Middleware;
 
 use Nucleus\Http\Request;
 use Nucleus\Http\Response;

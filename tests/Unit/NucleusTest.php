@@ -7,7 +7,7 @@ use Nucleus\Core\Nucleus;
 use Nucleus\Http\Response;
 use PHPUnit\Framework\TestCase;
 use Tests\Fakes\FakeRequest;
-use Tests\Fakes\FakeRouteMiddleware;
+use Tests\Fakes\Middleware\FakeRouteMiddleware;
 use Tests\Fakes\FakeControllerAction;
 
 class NucleusTest extends TestCase

@@ -125,6 +125,11 @@ class Application
         return $this->middlewares;
     }
 
+    public function addGlobalMiddleware(string $middleware): void
+    {
+        $this->middlewares[] = $middleware;
+    }
+
     public function getConfig(): Config
     {
         return $this->config;
