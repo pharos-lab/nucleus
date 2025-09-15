@@ -4,13 +4,34 @@ declare(strict_types=1);
 
 namespace Nucleus\Config;
 
+/**
+ * Class Environment
+ *
+ * Centralized environment variable manager.
+ *
+ * Responsibilities:
+ * - Load variables from a `.env` file
+ * - Provide get/set access to environment variables at runtime
+ * - Automatic casting of strings to bool, int, or float
+ * - Reset variables (useful for testing)
+ */
 class Environment
 {
-    /** @var array<string, mixed> */
+    /**
+     * Loaded environment variables.
+     *
+     * @var array<string, mixed>
+     */
     protected static array $variables = [];
 
     /**
-     * Load environment variables from a .env file.
+     * Load environment variables from a `.env` file.
+     *
+     * Each line should be in the format `KEY=value`.
+     * Lines starting with `#` are ignored as comments.
+     * Values are automatically cast to bool, int, float if applicable.
+     *
+     * @param string $path Path to the `.env` file
      */
     public static function load(string $path): void
     {
@@ -33,7 +54,11 @@ class Environment
     }
 
     /**
-     * Get an environment variable, with optional default.
+     * Get an environment variable.
+     *
+     * @param string $key Variable name
+     * @param mixed $default Value to return if variable does not exist
+     * @return mixed Variable value or $default
      */
     public static function get(string $key, mixed $default = null): mixed
     {
@@ -41,15 +66,22 @@ class Environment
     }
 
     /**
-     * Set a variable at runtime.
+     * Set an environment variable at runtime.
+     *
+     * Automatically casts the value to bool/int/float if possible.
+     *
+     * @param string $key Variable name
+     * @param mixed $value Value to set
      */
     public static function set(string $key, mixed $value): void
     {
-        self::$variables[$key] = self::cast(trim($value));
+        self::$variables[$key] = self::cast(trim((string)$value));
     }
 
     /**
-     * Reset all variables (for testing isolation)
+     * Reset all loaded variables.
+     *
+     * Useful for unit testing to avoid contamination between tests.
      */
     public static function reset(): void
     {
@@ -57,7 +89,10 @@ class Environment
     }
 
     /**
-     * Attempt to cast string values to bool/int/float automatically
+     * Attempt to cast string values to boolean, integer, or float automatically.
+     *
+     * @param string $value The raw string value
+     * @return mixed The casted value
      */
     protected static function cast(string $value): mixed
     {
@@ -65,6 +100,7 @@ class Environment
 
         if ($lower === 'true') return true;
         if ($lower === 'false') return false;
+
         if (is_numeric($value)) {
             return strpos($value, '.') !== false ? (float)$value : (int)$value;
         }

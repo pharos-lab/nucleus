@@ -4,12 +4,35 @@ declare(strict_types=1);
 
 namespace Nucleus\Config;
 
+/**
+ * Class Config
+ *
+ * Centralized configuration manager.
+ *
+ * Responsibilities:
+ * - Load configuration files from a directory
+ * - Provide get/set access to configuration values using dot notation
+ * - Check existence of configuration keys
+ * - Support nested configuration arrays
+ * - Allow runtime overrides of configuration values
+ * - Handle default values for missing keys
+ */
 class Config
 {
+    /**
+     * Array containing all loaded configuration items.
+     *
+     * @var array<string, mixed>
+     */
     protected array $items = [];
 
     /**
-     * Load all config files from a directory.
+     * Config constructor.
+     *
+     * Loads all PHP config files from a directory. Each file should return an array.
+     * The filename (without extension) becomes the top-level key.
+     *
+     * @param string $path Path to the configuration directory
      */
     public function __construct(string $path)
     {
@@ -23,7 +46,10 @@ class Config
 
     /**
      * Get a configuration value using dot notation.
-     * Returns $default if key is not found.
+     *
+     * @param string $key The configuration key (e.g., 'database.host')
+     * @param mixed $default Value to return if key is not found (default: null)
+     * @return mixed The configuration value or $default
      */
     public function get(string $key, mixed $default = null): mixed
     {
@@ -42,6 +68,11 @@ class Config
 
     /**
      * Set a configuration value at runtime using dot notation.
+     *
+     * If intermediate keys do not exist, they are created as arrays.
+     *
+     * @param string $key The configuration key (e.g., 'app.debug')
+     * @param mixed $value The value to set
      */
     public function set(string $key, mixed $value): void
     {
@@ -60,6 +91,9 @@ class Config
 
     /**
      * Check if a configuration key exists.
+     *
+     * @param string $key The configuration key (dot notation allowed)
+     * @return bool True if the key exists, false otherwise
      */
     public function has(string $key): bool
     {

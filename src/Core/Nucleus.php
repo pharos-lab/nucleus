@@ -13,28 +13,44 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * The Nucleus kernel.
  *
- * Responsible for handling incoming requests:
- * - Dispatching the request to the router
- * - Running global and route-specific middlewares
+ * Responsible for handling incoming HTTP requests:
+ * - Dispatching requests to the router
+ * - Running global and route-specific middlewares in correct order
  * - Resolving the final route action
  * - Returning a PSR-7 compatible response
  */
 class Nucleus
 {
-    /** @var Application The application instance */
+    /**
+     * Application instance.
+     *
+     * @var Application
+     */
     protected Application $app;
 
-    /** @var Router The router instance */
+    /**
+     * Router instance.
+     *
+     * @var Router
+     */
     protected Router $router;
 
-    /** @var RouteResolver|null Used internally by the router to resolve actions */
+    /**
+     * Route resolver (used internally by the router to resolve actions).
+     *
+     * @var RouteResolver|null
+     */
     protected ?RouteResolver $resolver = null;
 
-    /** @var array<string> Global middleware list */
+    /**
+     * Global middlewares registered for the application.
+     *
+     * @var string[]
+     */
     protected array $middlewares = [];
 
     /**
-     * Create a new kernel instance.
+     * Nucleus constructor.
      *
      * @param Application $app The main application instance
      */
@@ -48,8 +64,16 @@ class Nucleus
     /**
      * Handle an incoming HTTP request.
      *
-     * @param ServerRequestInterface $request The PSR-7 request
-     * @return NucleusResponseInterface The framework response
+     * This method:
+     * 1. Asks the router to dispatch the request and find a matching route
+     * 2. Returns a 404 response if no route is found
+     * 3. Combines global and route-specific middlewares
+     * 4. Builds a middleware pipeline (LIFO order)
+     * 5. Resolves the final route action
+     * 6. Executes the pipeline and returns the response
+     *
+     * @param ServerRequestInterface $request The PSR-7 HTTP request
+     * @return NucleusResponseInterface PSR-7 compatible response
      */
     public function handle(ServerRequestInterface $request): NucleusResponseInterface
     {
@@ -67,6 +91,11 @@ class Nucleus
         // Build the middleware pipeline (LIFO order)
         $pipeline = array_reduce(
             array_reverse($middlewares),
+            /**
+             * @param callable $next The next middleware/action in the pipeline
+             * @param string $middleware The middleware class name
+             * @return callable Middleware wrapped around next callable
+             */
             fn($next, $middleware) => fn($req) => (new $middleware())->handle($req, $next),
             fn($req) => $this->router->resolve($route->action, $req, $route->params)
         );
