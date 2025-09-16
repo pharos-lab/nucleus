@@ -1,17 +1,15 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+namespace Tests\Unit;
+
 use Nucleus\Core\Application;
 use Nucleus\Routing\Router;
 use Nucleus\Routing\RouteResolver;
 use Nucleus\View\View;
 use Nucleus\Http\Request;
-use Tests\Traits\ErrorHandlerIsolation;
 
 class ApplicationCoreProviderTest extends TestCase
 {
-
-    use ErrorHandlerIsolation;
     
     public function test_core_services_are_registered()
     {
