@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Nucleus\Exceptions;
 
 use Nucleus\Config\Environment;
+use Nucleus\Container\Container;
+use Nucleus\Http\Response;
+use Nucleus\View\View;
 
 /**
  * Global error and exception handler for the framework.
@@ -22,22 +25,29 @@ use Nucleus\Config\Environment;
  */
 class ErrorHandler
 {
+
+    protected Container $container;
+
+    protected View $view;
+
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+        $this->view = $container->make(View::class);
+    }
+
+
     /**
      * Handle an uncaught exception.
      *
      * @param \Throwable $e The exception to handle.
-     * @return void
+     * @return Response The HTTP response to send to the client.
      */
-    public static function handleException(\Throwable $e): void
+    public function handleException(\Throwable $e): Response
     {
         $isLocal = Environment::get('APP_ENV', 'production') === 'local';
-        $isCli   = php_sapi_name() === 'cli';
 
-        if ($isCli) {
-            self::renderCli($e, $isLocal);
-        } else {
-            self::renderHtml($e, $isLocal);
-        }
+        return $this->renderHtml($e, $isLocal);
     }
 
     /**
@@ -54,41 +64,22 @@ class ErrorHandler
      *
      * @throws \ErrorException
      */
-    public static function handleError(int $severity, string $message, string $file, int $line): bool
+    public function handleError(int $severity, string $message, string $file, int $line): bool
     {
         throw new \ErrorException($message, 0, $severity, $file, $line);
     }
 
     /**
-     * Render exception in CLI.
-     */
-    protected static function renderCli(\Throwable $e, bool $isLocal): void
-    {
-        if ($isLocal) {
-            echo "Exception: {$e->getMessage()}" . PHP_EOL;
-            echo "File: {$e->getFile()} on line {$e->getLine()}" . PHP_EOL;
-            echo "Trace:" . PHP_EOL;
-            echo $e->getTraceAsString() . PHP_EOL;
-        } else {
-            echo "An error occurred. Please try again later." . PHP_EOL;
-        }
-    }
-
-    /**
      * Render exception in HTML.
      */
-    protected static function renderHtml(\Throwable $e, bool $isLocal): void
+    protected function renderHtml(\Throwable $e, bool $isLocal): Response
     {
         if ($isLocal) {
-            echo "<h1 style='color:#c00;'>Exception: {$e->getMessage()}</h1>";
-            echo "<p><strong>File:</strong> {$e->getFile()} on line {$e->getLine()}</p>";
-            echo "<p><strong>Trace:</strong></p>";
-            echo "<pre style='background:#f5f5f5;padding:10px;border:1px solid #ddd;'>";
-            echo htmlspecialchars($e->getTraceAsString());
-            echo "</pre>";
+            $content = $this->view->render('errors.local', ['exception' => $e]);
         } else {
-            echo "<h1>Something went wrong</h1>";
-            echo "<p>Please try again later.</p>";
+            $content = $this->view->render('errors.production');
         }
+
+        return new Response($content, 500, ['Content-Type' => 'text/html']);
     }
 }

@@ -5,13 +5,24 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 use Nucleus\Config\Environment;
 use Nucleus\Exceptions\ErrorHandler;
+use Nucleus\Container\Container;
+use Nucleus\View\View;
+use Nucleus\Http\Response;
 
 final class ErrorHandlerTest extends TestCase
 {
+    protected Container $container;
+    protected ErrorHandler $handler;
+
     protected function setUp(): void
     {
         Environment::reset();
-        ob_start(); // capture toute sortie
+        ob_start(); // capture sortie CLI
+
+        // Container simulé avec une vue simple
+        $this->container = new Container();
+        $this->container->bind(View::class, fn() => new View(__DIR__ . '/../Fakes'));
+        $this->handler = new ErrorHandler($this->container);
     }
 
     protected function tearDown(): void
@@ -19,32 +30,31 @@ final class ErrorHandlerTest extends TestCase
         ob_end_clean();
     }
 
-    public function testHandleExceptionInLocalEnvironment(): void
+    public function testHandleExceptionReturnsResponseInLocalEnvironment(): void
     {
         Environment::set('APP_ENV', 'local');
         $exception = new \Exception("Boom Local");
 
-        ErrorHandler::handleException($exception);
+        // On force le rendu HTTP
+        $response = $this->handler->handleException($exception);
 
-        $output = ob_get_contents();
-
-        $this->assertStringContainsString("Boom Local", $output, "Should show the real error message in local env.");
-        $this->assertStringContainsString("File:", $output, "Should include the file name.");
-        $this->assertStringContainsString("Trace", $output, "Should include the stack trace.");
+        // Si HTTP, handleException renvoie un Response
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertSame(500, $response->getStatusCode());
+        $this->assertStringContainsString("Boom Local", (string) $response->getBody());
     }
 
-    public function testHandleExceptionInProductionEnvironment(): void
+    public function testHandleExceptionReturnsGenericResponseInProduction(): void
     {
         Environment::set('APP_ENV', 'production');
         $exception = new \Exception("Boom Prod");
 
-        ErrorHandler::handleException($exception);
+        $response = $this->handler->handleException($exception);
 
-        $output = ob_get_contents();
-
-        $this->assertStringContainsString("An error occurred. Please try again later.", $output, "Should show a generic safe message.");
-        $this->assertStringNotContainsString("Boom Prod", $output, "Should NOT expose the internal message.");
-        $this->assertStringNotContainsString("Trace", $output, "Should not leak stack trace.");
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertSame(500, $response->getStatusCode());
+        $this->assertStringContainsString("Something went wrong", (string) $response->getBody());
+        $this->assertStringNotContainsString("Boom Prod", (string) $response->getBody());
     }
 
     public function testHandleErrorTransformsToException(): void
@@ -52,26 +62,6 @@ final class ErrorHandlerTest extends TestCase
         $this->expectException(\ErrorException::class);
         $this->expectExceptionMessage("Test warning");
 
-        ErrorHandler::handleError(E_USER_WARNING, "Test warning", __FILE__, __LINE__);
-    }
-
-    public function testCliRenderingShowsPlainText(): void
-    {
-        Environment::set('APP_ENV', 'local');
-        $exception = new \RuntimeException("CLI Boom");
-
-        // Simule un environnement CLI
-        $originalSapi = \PHP_SAPI;
-        // ⚠️ hack : on remplace temporairement la fonction php_sapi_name()
-        // mais pour PHPUnit on peut directement tester renderCli()
-        $refMethod = new ReflectionMethod(ErrorHandler::class, 'renderCli');
-        $refMethod->setAccessible(true);
-
-        $refMethod->invoke(null, $exception, true);
-
-        $output = ob_get_contents();
-
-        $this->assertStringContainsString("CLI Boom", $output, "Should display exception message in CLI mode.");
-        $this->assertStringContainsString("Trace", $output, "Should include stack trace in CLI mode.");
+        $this->handler->handleError(E_USER_WARNING, "Test warning", __FILE__, __LINE__);
     }
 }

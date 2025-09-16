@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Nucleus\Core\Bootstrap;
 
+use Nucleus\Exceptions\ErrorHandler;
 use Nucleus\Routing\Router;
 use Nucleus\Routing\RouteResolver;
 use Nucleus\View\View;
@@ -28,15 +29,18 @@ class NucleusProvider extends Provider
     public function register(): void
     {
         // Route resolver
-        $this->container->bind(RouteResolver::class, fn($c) => new RouteResolver($c));
+        $this->container->bind(RouteResolver::class, fn($container) => new RouteResolver($container));
 
         // Router
-        $this->container->bind(Router::class, fn($c) => new Router($c->make(RouteResolver::class)));
+        $this->container->bind(Router::class, fn($container) => new Router($container->make(RouteResolver::class)));
 
         // View
         $this->container->bind(View::class, fn() => new View($this->basePath));
 
         // Request
         $this->container->bind(Request::class, fn() => Request::capture());
+
+        //  errors Handler
+        $this->container->bind(ErrorHandler::class, fn($container) => new ErrorHandler($container));
     }
 }

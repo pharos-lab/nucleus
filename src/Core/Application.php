@@ -88,10 +88,10 @@ class Application
     {
         //Load environment variables from .env
         Environment::load($this->basePath . '/.env');
-        $this->registerErrorHandling();
         $this->loadConfig();
         $this->registerCoreBindings();
         $this->registerUserBindings();
+        $this->registerErrorHandling();
 
         $this->router = $this->container->make(Router::class);
 
@@ -104,8 +104,10 @@ class Application
      */
     protected function registerErrorHandling(): void
     {
-        set_exception_handler([ErrorHandler::class, 'handleException']);
-        set_error_handler([ErrorHandler::class, 'handleError']);
+        $handler = $this->container->make(ErrorHandler::class);
+
+        set_exception_handler([$handler, 'handleException']);
+        set_error_handler([$handler, 'handleError']);
     }
 
 

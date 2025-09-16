@@ -41,6 +41,14 @@ class View
      */
     public function make(string $view, array $data = []): Response
     {
+        $content = $this->render($view, $data);
+
+        // Return as an HTTP response
+        return new Response($content);
+    }
+
+    public function render(string $view, array $data = []): string
+    {
         $viewPath = $this->basePath . '/views/' . str_replace('.', '/', $view) . '.php';
 
         if (!file_exists($viewPath)) {
@@ -53,9 +61,6 @@ class View
         // Capture the output
         ob_start();
         include $viewPath;
-        $content = ob_get_clean();
-
-        // Return as an HTTP response
-        return new Response($content);
+        return ob_get_clean();
     }
 }
