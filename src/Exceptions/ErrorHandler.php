@@ -30,15 +30,13 @@ class ErrorHandler
      */
     public static function handleException(\Throwable $e): void
     {
-        $env = Environment::get('APP_ENV', 'production');
+        $isLocal = Environment::get('APP_ENV', 'production') === 'local';
+        $isCli   = php_sapi_name() === 'cli';
 
-        if ($env === 'local') {
-            // Developer-friendly output
-            echo "Uncaught exception: " . $e->getMessage() . PHP_EOL;
-            echo "Stack trace: " . PHP_EOL . $e->getTraceAsString() . PHP_EOL;
+        if ($isCli) {
+            self::renderCli($e, $isLocal);
         } else {
-            // Production-safe message
-            echo "An unexpected error occurred. Please try again later.";
+            self::renderHtml($e, $isLocal);
         }
     }
 
@@ -59,5 +57,38 @@ class ErrorHandler
     public static function handleError(int $severity, string $message, string $file, int $line): bool
     {
         throw new \ErrorException($message, 0, $severity, $file, $line);
+    }
+
+    /**
+     * Render exception in CLI.
+     */
+    protected static function renderCli(\Throwable $e, bool $isLocal): void
+    {
+        if ($isLocal) {
+            echo "Exception: {$e->getMessage()}" . PHP_EOL;
+            echo "File: {$e->getFile()} on line {$e->getLine()}" . PHP_EOL;
+            echo "Trace:" . PHP_EOL;
+            echo $e->getTraceAsString() . PHP_EOL;
+        } else {
+            echo "An error occurred. Please try again later." . PHP_EOL;
+        }
+    }
+
+    /**
+     * Render exception in HTML.
+     */
+    protected static function renderHtml(\Throwable $e, bool $isLocal): void
+    {
+        if ($isLocal) {
+            echo "<h1 style='color:#c00;'>Exception: {$e->getMessage()}</h1>";
+            echo "<p><strong>File:</strong> {$e->getFile()} on line {$e->getLine()}</p>";
+            echo "<p><strong>Trace:</strong></p>";
+            echo "<pre style='background:#f5f5f5;padding:10px;border:1px solid #ddd;'>";
+            echo htmlspecialchars($e->getTraceAsString());
+            echo "</pre>";
+        } else {
+            echo "<h1>Something went wrong</h1>";
+            echo "<p>Please try again later.</p>";
+        }
     }
 }
