@@ -1,6 +1,7 @@
 <?php
 
 use App\Providers\AppProvider;
+use Nucleus\Config\Environment;
 
 return [
     // Path to the routes file
@@ -12,6 +13,6 @@ return [
     ],
 
     // Other configuration options (future use)
-    'env' => 'dev',
+    'env' => Environment::get('APP_ENV', 'dev'),
     'timezone' => 'UTC',
 ];

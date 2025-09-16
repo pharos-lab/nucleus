@@ -12,7 +12,6 @@ class TestMiddleware implements MiddlewareInterface
     {
         // Action before passing to the next middleware/router
         // Example: logging, authentication, request modification
-        var_dump('Test Middleware executed');
 
         $response = $next($request);
 

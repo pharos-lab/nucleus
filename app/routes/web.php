@@ -5,7 +5,7 @@ use Nucleus\Http\Response;
 
 // Closure simple
 // Controller@method
-$router->get('/home', [TestController::class, 'index']);
+$router->get('/', [TestController::class, 'index']);
 $router->get('/api', [TestController::class, 'api']);
 
 $router->get('/{id}', function ($id) {

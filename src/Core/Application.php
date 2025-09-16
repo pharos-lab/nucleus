@@ -8,6 +8,7 @@ use Nucleus\Config\Config;
 use Nucleus\Config\Environment;
 use Nucleus\Container\Container;
 use Nucleus\Core\Bootstrap\NucleusProvider;
+use Nucleus\Exceptions\ErrorHandler;
 use Nucleus\Http\Request;
 use Nucleus\Routing\Router;
 
@@ -87,7 +88,7 @@ class Application
     {
         //Load environment variables from .env
         Environment::load($this->basePath . '/.env');
-
+        $this->registerErrorHandling();
         $this->loadConfig();
         $this->registerCoreBindings();
         $this->registerUserBindings();
@@ -97,6 +98,16 @@ class Application
         $this->registerRoutes();
         $this->middlewares = $this->registerGlobalMiddlewares();
     }
+
+    /**
+     * Register global error and exception handling.
+     */
+    protected function registerErrorHandling(): void
+    {
+        set_exception_handler([ErrorHandler::class, 'handleException']);
+        set_error_handler([ErrorHandler::class, 'handleError']);
+    }
+
 
     /**
      * Load configuration files from the config directory using Config class.

@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use Nucleus\Config\Environment;
 use Nucleus\Controller\BaseController;
 use Nucleus\Http\Request;
 
@@ -9,6 +10,7 @@ class TestController extends BaseController
 {
     public function index(Request $request)
     {
+        throw new \Exception("Boom from controller");
         return $this->view('home', ['name' => 'mth']);
     }
 
