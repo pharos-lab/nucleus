@@ -26,10 +26,25 @@ use Nucleus\View\View;
 class ErrorHandler
 {
 
+    /**
+     * Service container instance.
+     *
+     * @var Container
+     */
     protected Container $container;
 
+    /**
+     * View renderer instance.
+     *
+     * @var View
+     */
     protected View $view;
 
+    /**
+     * Constructor.
+     *
+     * @param Container $container The service container.
+     */
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -71,6 +86,13 @@ class ErrorHandler
 
     /**
      * Render exception in HTML.
+     * 
+     * In local environment, show full details.
+     * In production, show a generic error message.
+     * 
+     * @param \Throwable $e The exception to render.
+     * @param bool $isLocal Whether the environment is local.
+     * @return Response The HTTP response with rendered content.
      */
     protected function renderHtml(\Throwable $e, bool $isLocal): Response
     {

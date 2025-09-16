@@ -17,17 +17,11 @@ final class ErrorHandlerTest extends TestCase
     protected function setUp(): void
     {
         Environment::reset();
-        ob_start(); // capture sortie CLI
 
         // Container simulé avec une vue simple
         $this->container = new Container();
         $this->container->bind(View::class, fn() => new View(__DIR__ . '/../Fakes'));
         $this->handler = new ErrorHandler($this->container);
-    }
-
-    protected function tearDown(): void
-    {
-        ob_end_clean();
     }
 
     public function testHandleExceptionReturnsResponseInLocalEnvironment(): void

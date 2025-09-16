@@ -9,9 +9,13 @@ use Tests\Fakes\FakeRequest;
 use Nucleus\Routing\Router;
 use Nucleus\Routing\Route;
 use PHPUnit\Framework\TestCase;
+use Tests\Traits\ErrorHandlerIsolation;
 
 class RouterTest extends TestCase
 {
+
+    use ErrorHandlerIsolation;
+    
     protected Router $router;
 
     protected function setUp(): void

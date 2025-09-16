@@ -9,9 +9,12 @@ use PHPUnit\Framework\TestCase;
 use Tests\Fakes\FakeRequest;
 use Tests\Fakes\Middleware\FakeRouteMiddleware;
 use Tests\Fakes\FakeControllerAction;
+use Tests\Traits\ErrorHandlerIsolation;
 
 class NucleusTest extends TestCase
 {
+    use ErrorHandlerIsolation;
+    
     protected Application $app;
 
     protected function setUp(): void

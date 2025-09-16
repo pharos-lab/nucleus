@@ -10,6 +10,7 @@ use Nucleus\Container\Container;
 use Nucleus\Core\Bootstrap\NucleusProvider;
 use Nucleus\Exceptions\ErrorHandler;
 use Nucleus\Http\Request;
+use Nucleus\Http\Response;
 use Nucleus\Routing\Router;
 
 /**
@@ -101,12 +102,12 @@ class Application
 
     /**
      * Register global error and exception handling.
+     * 
+     * 
      */
     protected function registerErrorHandling(): void
     {
         $handler = $this->container->make(ErrorHandler::class);
-
-        set_exception_handler([$handler, 'handleException']);
         set_error_handler([$handler, 'handleError']);
     }
 
@@ -179,6 +180,7 @@ class Application
         return $this->config->get('middleware', []);
     }
 
+
     /**
      * Run the application: handle request and send response.
      *
@@ -187,11 +189,29 @@ class Application
     public function run(): void
     {
         $request = $this->container->make(Request::class);
-        $kernel = new Nucleus($this);
-        $response = $kernel->handle($request);
-
+        $response = $this->handleRequest($request);
         $response->send();
     }
+
+    /**
+     * Handle the incoming HTTP request through the kernel.
+     *
+     * Catches any exceptions and delegates to the error handler.
+     *
+     * @param Request $request The incoming HTTP request.
+     * @return Response The HTTP response to send back to the client.
+     */
+    protected function handleRequest(Request $request): Response
+    {
+        $kernel = new Nucleus($this);
+        try {
+            return $kernel->handle($request);
+        } catch (\Throwable $e) {
+            $handler = $this->container->make(ErrorHandler::class);
+            return $handler->handleException($e) ?? new Response("An error occurred", 500);
+        }
+    }
+
 
     // --- Getters ---
 

@@ -2,9 +2,13 @@
 
 use PHPUnit\Framework\TestCase;
 use Nucleus\Core\Application;
+use Tests\Traits\ErrorHandlerIsolation;
 
 class ApplicationProviderTest extends TestCase
 {
+
+    use ErrorHandlerIsolation;
+    
     public function test_it_registers_user_providers()
     {
         $app = new Application(__DIR__ . '/../Fakes');

@@ -6,9 +6,12 @@ use Nucleus\Http\Response;
 use Nucleus\Core\Application;
 use PHPUnit\Framework\TestCase;
 use Tests\Fakes\FakeRequest;
+use Tests\Traits\ErrorHandlerIsolation;
 
 class RouteResolverTest extends TestCase
 {
+    use ErrorHandlerIsolation;
+    
     protected Application $app;
 
     protected function setUp(): void

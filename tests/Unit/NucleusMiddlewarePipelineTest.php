@@ -11,9 +11,13 @@ use Tests\Fakes\Middleware\FakeMiddlewareTwo;
 use Tests\Fakes\Middleware\FakeMiddlewareInterrupt;
 use Tests\Fakes\FakeRequest;
 use Tests\Fakes\Middleware\MiddlewareLog;
+use Tests\Traits\ErrorHandlerIsolation;
 
 class NucleusMiddlewarePipelineTest extends TestCase
 {
+
+    use ErrorHandlerIsolation;
+    
     protected Application $app;
 
     protected function setUp(): void
