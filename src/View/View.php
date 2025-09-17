@@ -47,6 +47,16 @@ class View
         return new Response($content);
     }
 
+    /**
+     * Render the view file and return its content as a string.
+     *
+     * @param string $view Dot-notated view name (e.g. "pages.home").
+     * @param array $data Associative array of variables to pass to the view.
+     *
+     * @return string Rendered view content.
+     *
+     * @throws \RuntimeException If the view file does not exist.
+     */
     public function render(string $view, array $data = []): string
     {
         $viewPath = $this->basePath . '/views/' . str_replace('.', '/', $view) . '.php';
