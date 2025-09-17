@@ -24,7 +24,7 @@ final class ErrorHandlerTest extends TestCase
         $this->container = new Container();
             // handler will need to make View and Logger
         $this->container->bind(View::class, fn() => new View(__DIR__ . '/../Fakes'));
-        $this->container->bind(NucleusLoggerInterface::class, fn() => new FileLogger(__DIR__ . '/../temp/test.log'));
+        $this->container->bind(NucleusLoggerInterface::class, fn() => new FileLogger(__DIR__ . '/../temp/handler.log'));
         $this->handler = new ErrorHandler($this->container);
     }
 

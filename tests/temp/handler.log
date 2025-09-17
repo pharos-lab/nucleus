@@ -1,0 +1,21 @@
+2025-09-17 09:18:11 ERROR Boom Local CONTEXT: exception={} file=/workspaces/nucleus/tests/Unit/ErrorHandlerTest.php line=34 trace=#0 /workspaces/nucleus/vendor/phpunit/phpunit/src/Framework/TestCase.php(1316): ErrorHandlerTest->testHandleExceptionReturnsResponseInLocalEnvironment()
+#1 /workspaces/nucleus/vendor/phpunit/phpunit/src/Framework/TestCase.php(516): PHPUnit\Framework\TestCase->runTest()
+#2 /workspaces/nucleus/vendor/phpunit/phpunit/src/Framework/TestRunner/TestRunner.php(99): PHPUnit\Framework\TestCase->runBare()
+#3 /workspaces/nucleus/vendor/phpunit/phpunit/src/Framework/TestCase.php(357): PHPUnit\Framework\TestRunner->run(Object(ErrorHandlerTest))
+#4 /workspaces/nucleus/vendor/phpunit/phpunit/src/Framework/TestSuite.php(374): PHPUnit\Framework\TestCase->run()
+#5 /workspaces/nucleus/vendor/phpunit/phpunit/src/TextUI/TestRunner.php(64): PHPUnit\Framework\TestSuite->run()
+#6 /workspaces/nucleus/vendor/phpunit/phpunit/src/TextUI/Application.php(229): PHPUnit\TextUI\TestRunner->run(Object(PHPUnit\TextUI\Configuration\Configuration), Object(PHPUnit\Runner\ResultCache\DefaultResultCache), Object(PHPUnit\Framework\TestSuite))
+#7 /workspaces/nucleus/vendor/phpunit/phpunit/phpunit(104): PHPUnit\TextUI\Application->run(Array)
+#8 /workspaces/nucleus/vendor/bin/phpunit(122): include('/workspaces/nuc...')
+#9 {main}
+2025-09-17 09:18:11 ERROR Boom Prod CONTEXT: exception={} file=/workspaces/nucleus/tests/Unit/ErrorHandlerTest.php line=48 trace=#0 /workspaces/nucleus/vendor/phpunit/phpunit/src/Framework/TestCase.php(1316): ErrorHandlerTest->testHandleExceptionReturnsGenericResponseInProduction()
+#1 /workspaces/nucleus/vendor/phpunit/phpunit/src/Framework/TestCase.php(516): PHPUnit\Framework\TestCase->runTest()
+#2 /workspaces/nucleus/vendor/phpunit/phpunit/src/Framework/TestRunner/TestRunner.php(99): PHPUnit\Framework\TestCase->runBare()
+#3 /workspaces/nucleus/vendor/phpunit/phpunit/src/Framework/TestCase.php(357): PHPUnit\Framework\TestRunner->run(Object(ErrorHandlerTest))
+#4 /workspaces/nucleus/vendor/phpunit/phpunit/src/Framework/TestSuite.php(374): PHPUnit\Framework\TestCase->run()
+#5 /workspaces/nucleus/vendor/phpunit/phpunit/src/TextUI/TestRunner.php(64): PHPUnit\Framework\TestSuite->run()
+#6 /workspaces/nucleus/vendor/phpunit/phpunit/src/TextUI/Application.php(229): PHPUnit\TextUI\TestRunner->run(Object(PHPUnit\TextUI\Configuration\Configuration), Object(PHPUnit\Runner\ResultCache\DefaultResultCache), Object(PHPUnit\Framework\TestSuite))
+#7 /workspaces/nucleus/vendor/phpunit/phpunit/phpunit(104): PHPUnit\TextUI\Application->run(Array)
+#8 /workspaces/nucleus/vendor/bin/phpunit(122): include('/workspaces/nuc...')
+#9 {main}
+2025-09-17 09:18:11 WARNING Test warning CONTEXT: severity=512 file=/workspaces/nucleus/tests/Unit/ErrorHandlerTest.php line=63

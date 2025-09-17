@@ -45,11 +45,12 @@ class NucleusProvider extends Provider
 
         // Logger
         $this->container->bind(NucleusLoggerInterface::class, function () {
-            $driver = $this->app->getConfig()->get('app.log', 'file');
+            $driver = $this->app->getConfig()->get('logging.driver', 'file');
 			return match ($driver) {
 				'null' => new NullLogger(),
 				default => new FileLogger(
-					$this->basePath . '/storage/logs/app.log'
+					$this->basePath . $this->app->getConfig()->get('logging.path', 'storage/logs/app.log'),
+                    $this->app->getConfig()->get('logging.level', 'debug')
 				),
 			};
 		});

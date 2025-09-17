@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Nucleus\Logging;
 
 use Psr\Log\AbstractLogger;
+use Psr\Log\LogLevel;
 
 /**
  * Simple file-based logger.
@@ -15,7 +16,15 @@ use Psr\Log\AbstractLogger;
  */
 class FileLogger extends AbstractLogger
 {
+    /**
+     * Path to the log file.
+     */
     protected string $filePath;
+
+    /**
+     * Minimum log level to record.
+     */
+    protected string $level;
 
     /**
      * Persistent context that will be merged into each log call when using withContext().
@@ -25,13 +34,32 @@ class FileLogger extends AbstractLogger
     protected array $defaultContext = [];
 
     /**
+     * Log levels order for filtering.
+     *
+     * Lower number means lower severity.
+     *
+     * @var array<string,int>
+     */
+    protected array $levelsOrder = [
+        LogLevel::DEBUG => 100,
+        LogLevel::INFO => 200,
+        LogLevel::NOTICE => 250,
+        LogLevel::WARNING => 300,
+        LogLevel::ERROR => 400,
+        LogLevel::CRITICAL => 500,
+        LogLevel::ALERT => 550,
+        LogLevel::EMERGENCY => 600,
+    ];
+
+    /**
      * Create a new FileLogger.
      *
      * @param string $filePath Path to the log file (directory must be writable).
      */
-    public function __construct(string $filePath)
+    public function __construct(string $filePath, $level = 'debug')
     {
         $this->filePath = $filePath;
+        $this->level = $level;
     }
 
     /**
@@ -45,6 +73,12 @@ class FileLogger extends AbstractLogger
      */
     public function log($level, $message, array $context = []): void
     {
+        // Ignore messages below configured level
+        if ($this->levelsOrder[$level] < $this->levelsOrder[$this->level]) {
+            return;
+        }
+
+        // Ensure level and message are strings
         $levelStr = strtoupper((string) $level);
         $messageStr = (string) $message;
 
@@ -63,7 +97,7 @@ class FileLogger extends AbstractLogger
         // Format remaining context as key=value pairs (simple scalar or json for complex)
         $extra = $this->formatRemainingContext($context);
 
-        $line = $levelStr . ' ' . $messageStr . ($extra !== '' ? ' CONTEXT: ' . $extra : '') . PHP_EOL;
+        $line = date('Y-m-d H:i:s') . ' ' . $levelStr . ' ' . $messageStr . ($extra !== '' ? ' CONTEXT: ' . $extra : '') . PHP_EOL;
 
         // Ensure directory exists
         $dir = dirname($this->filePath);
