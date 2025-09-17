@@ -63,7 +63,7 @@ class FileLogger extends AbstractLogger
         // Format remaining context as key=value pairs (simple scalar or json for complex)
         $extra = $this->formatRemainingContext($context);
 
-        $line = $levelStr . ' ' . $messageStr . ($extra !== '' ? ' ' . $extra : '') . PHP_EOL;
+        $line = $levelStr . ' ' . $messageStr . ($extra !== '' ? ' CONTEXT: ' . $extra : '') . PHP_EOL;
 
         // Ensure directory exists
         $dir = dirname($this->filePath);

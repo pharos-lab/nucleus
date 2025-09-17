@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Nucleus\Core\Bootstrap;
 
+use Nucleus\Contracts\NucleusLoggerInterface;
 use Nucleus\Exceptions\ErrorHandler;
 use Nucleus\Routing\Router;
 use Nucleus\Routing\RouteResolver;
 use Nucleus\View\View;
 use Nucleus\Http\Request;
+use Nucleus\Logging\FileLogger;
+use Nucleus\Logging\NullLogger;
 
 /**
  * Class NucleusProvider
@@ -39,6 +42,17 @@ class NucleusProvider extends Provider
 
         // Request
         $this->container->bind(Request::class, fn() => Request::capture());
+
+        // Logger
+        $this->container->bind(NucleusLoggerInterface::class, function () {
+            $driver = $this->app->getConfig()->get('app.log', 'file');
+			return match ($driver) {
+				'null' => new NullLogger(),
+				default => new FileLogger(
+					$this->basePath . '/storage/logs/app.log'
+				),
+			};
+		});
 
         //  errors Handler
         $this->container->bind(ErrorHandler::class, fn($container) => new ErrorHandler($container));

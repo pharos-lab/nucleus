@@ -84,11 +84,12 @@ class LoggerTest extends TestCase
     public function testWithContextAddsPersistentContext(): void
     {
         $logger = new FileLogger($this->logFile);
-        $logger = $logger->withContext(['request_id' => 'abc123']);
+        $logger = $logger->withContext(['request_id' => 'abc123', 'user' => 'tester']);
         $logger->info('Something happened {request_id}', ['request_id' => 'should be overridden']);
 
         $content = file_get_contents($this->logFile);
         $this->assertStringContainsString('should be overridden', $content);
         $this->assertStringContainsString('Something happened', $content);
+        $this->assertStringContainsString('user=tester', $content);
     }
 }

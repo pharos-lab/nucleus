@@ -6,8 +6,10 @@ use PHPUnit\Framework\TestCase;
 use Nucleus\Config\Environment;
 use Nucleus\Exceptions\ErrorHandler;
 use Nucleus\Container\Container;
+use Nucleus\Contracts\NucleusLoggerInterface;
 use Nucleus\View\View;
 use Nucleus\Http\Response;
+use Nucleus\Logging\FileLogger;
 
 final class ErrorHandlerTest extends TestCase
 {
@@ -20,7 +22,9 @@ final class ErrorHandlerTest extends TestCase
 
         // Container simulé avec une vue simple
         $this->container = new Container();
+            // handler will need to make View and Logger
         $this->container->bind(View::class, fn() => new View(__DIR__ . '/../Fakes'));
+        $this->container->bind(NucleusLoggerInterface::class, fn() => new FileLogger(__DIR__ . '/../temp/test.log'));
         $this->handler = new ErrorHandler($this->container);
     }
 
