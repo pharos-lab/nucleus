@@ -41,6 +41,7 @@ class FileLogger extends AbstractLogger
      * @var array<string,int>
      */
     protected array $levelsOrder = [
+        'success' => 100,
         LogLevel::DEBUG => 100,
         LogLevel::INFO => 200,
         LogLevel::NOTICE => 250,
@@ -132,7 +133,7 @@ class FileLogger extends AbstractLogger
      */
     public function success(string $message, array $context = []): void
     {
-        $this->log('SUCCESS', $message, $context);
+        $this->log('success', $message, $context);
     }
 
     /**

@@ -1,19 +1,20 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Application;
 
 use Nucleus\Core\Application;
 use Nucleus\Routing\Router;
 use Nucleus\Routing\RouteResolver;
 use Nucleus\View\View;
 use Nucleus\Http\Request;
+use Tests\Unit\TestCase;
 
 class ApplicationCoreProviderTest extends TestCase
 {
     
     public function test_core_services_are_registered()
     {
-        $app = new Application(__DIR__ . '/../Fakes');
+        $app = new Application(__DIR__ . '/../../Fakes');
 
         $container = $app->getContainer();
 

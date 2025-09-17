@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Routing;
 
 use Nucleus\Core\Application;
 use Nucleus\Exceptions\RouteNamedNotFindException;
@@ -20,7 +20,7 @@ class RouterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->router =new Application(__DIR__ . '/../Fakes')->getRouter();
+        $this->router =new Application(__DIR__ . '/../../Fakes')->getRouter();
     }
 
     public function testGetRouteRegistersCorrectly(): void

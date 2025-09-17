@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Nucleus;
 
 use Nucleus\Core\Application;
 use Nucleus\Core\Nucleus;
@@ -19,7 +19,7 @@ class NucleusTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->app = new Application(__DIR__ . '/../Fakes');
+        $this->app = new Application(__DIR__ . '/../../Fakes');
     }
 
     public function testRouteWithoutMiddlewareReturnsControllerResponse(): void

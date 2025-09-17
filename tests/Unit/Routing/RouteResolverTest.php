@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Routing;
 
 use Nucleus\Http\Response;
 use Nucleus\Core\Application;
@@ -16,7 +16,7 @@ class RouteResolverTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->app =new Application(__DIR__ . '/../Fakes');
+        $this->app =new Application(__DIR__ . '/../../Fakes');
     }
     
 

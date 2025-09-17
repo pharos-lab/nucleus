@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Nucleus;
 
 use Nucleus\Http\Response;
 use Nucleus\Core\Application;
@@ -22,7 +22,7 @@ class NucleusMiddlewarePipelineTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->app = new Application(__DIR__ . '/../Fakes');
+        $this->app = new Application(__DIR__ . '/../../Fakes');
 
         MiddlewareLog::reset();
     }

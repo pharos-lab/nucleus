@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Tests\Unit;
+namespace Tests\Unit\Logging;
 
 use PHPUnit\Framework\TestCase;
 use Nucleus\Logging\FileLogger;
@@ -15,7 +13,7 @@ class LoggerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->logFile = __DIR__ . '/../temp/test.log';
+        $this->logFile = __DIR__ . '/../../Fakes/storage/logs/test.log';
 
         if (file_exists($this->logFile)) {
             unlink($this->logFile);
@@ -77,6 +75,8 @@ class LoggerTest extends TestCase
         $logger->success('Operation completed');
 
         $content = file_get_contents($this->logFile);
+
+        var_dump($content); // Debug output to verify log content
         $this->assertStringContainsString('SUCCESS', $content);
         $this->assertStringContainsString('Operation completed', $content);
     }

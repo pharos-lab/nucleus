@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\Application;
+
 use PHPUnit\Framework\TestCase;
 use Nucleus\Core\Application;
 use Tests\Traits\ErrorHandlerIsolation;
@@ -11,7 +13,7 @@ class ApplicationProviderTest extends TestCase
     
     public function test_it_registers_user_providers()
     {
-        $app = new Application(__DIR__ . '/../Fakes');
+        $app = new Application(__DIR__ . '/../../Fakes');
 
         // le provider doit avoir enregistré le service "foo"
         $this->assertTrue($app->getContainer()->has('foo'));
