@@ -1,0 +1,141 @@
+2025-09-18 08:22:06 INFO Application initialized. CONTEXT: basePath=/workspaces/nucleus/app env=local
+2025-09-18 08:22:06 ERROR Boom from controller CONTEXT: exception={} file=/workspaces/nucleus/app/Controllers/TestController.php line=13 trace=#0 [internal function]: App\Controllers\TestController->index(Object(Nucleus\Http\Request))
+#1 /workspaces/nucleus/src/Routing/RouteResolver.php(133): ReflectionMethod->invokeArgs(Object(App\Controllers\TestController), Array)
+#2 /workspaces/nucleus/src/Routing/RouteResolver.php(62): Nucleus\Routing\RouteResolver->resolveController(Array, Object(Nucleus\Http\Request), Array)
+#3 /workspaces/nucleus/src/Routing/Router.php(104): Nucleus\Routing\RouteResolver->resolve(Array, Object(Nucleus\Http\Request), Array)
+#4 /workspaces/nucleus/src/Core/Nucleus.php(100): Nucleus\Routing\Router->resolve(Array, Object(Nucleus\Http\Request), Array)
+#5 /workspaces/nucleus/app/Middleware/TestMiddleware.php(16): Nucleus\Core\Nucleus->{closure:Nucleus\Core\Nucleus::handle():100}(Object(Nucleus\Http\Request))
+#6 /workspaces/nucleus/src/Core/Nucleus.php(99): App\Middleware\TestMiddleware->handle(Object(Nucleus\Http\Request), Object(Closure))
+#7 /workspaces/nucleus/src/Core/Nucleus.php(104): Nucleus\Core\Nucleus->{closure:{closure:Nucleus\Core\Nucleus::handle():99}:99}(Object(Nucleus\Http\Request))
+#8 /workspaces/nucleus/src/Core/Application.php(220): Nucleus\Core\Nucleus->handle(Object(Nucleus\Http\Request))
+#9 /workspaces/nucleus/src/Core/Application.php(204): Nucleus\Core\Application->handleRequest(Object(Nucleus\Http\Request))
+#10 /workspaces/nucleus/app/public/index.php(12): Nucleus\Core\Application->run()
+#11 {main}
+2025-09-18 08:22:07 WARNING http_response_code(): Cannot set response code - headers already sent (output started at /workspaces/nucleus/src/Logging/FileLogger.php:111) CONTEXT: severity=2 file=/workspaces/nucleus/src/Http/Response.php line=177
+2025-09-18 08:22:40 INFO Application initialized. CONTEXT: basePath=/workspaces/nucleus/app env=local
+2025-09-18 08:22:40 ERROR Boom from controller CONTEXT: exception={} file=/workspaces/nucleus/app/Controllers/TestController.php line=13 trace=#0 [internal function]: App\Controllers\TestController->index(Object(Nucleus\Http\Request))
+#1 /workspaces/nucleus/src/Routing/RouteResolver.php(133): ReflectionMethod->invokeArgs(Object(App\Controllers\TestController), Array)
+#2 /workspaces/nucleus/src/Routing/RouteResolver.php(62): Nucleus\Routing\RouteResolver->resolveController(Array, Object(Nucleus\Http\Request), Array)
+#3 /workspaces/nucleus/src/Routing/Router.php(104): Nucleus\Routing\RouteResolver->resolve(Array, Object(Nucleus\Http\Request), Array)
+#4 /workspaces/nucleus/src/Core/Nucleus.php(100): Nucleus\Routing\Router->resolve(Array, Object(Nucleus\Http\Request), Array)
+#5 /workspaces/nucleus/app/Middleware/TestMiddleware.php(16): Nucleus\Core\Nucleus->{closure:Nucleus\Core\Nucleus::handle():100}(Object(Nucleus\Http\Request))
+#6 /workspaces/nucleus/src/Core/Nucleus.php(99): App\Middleware\TestMiddleware->handle(Object(Nucleus\Http\Request), Object(Closure))
+#7 /workspaces/nucleus/src/Core/Nucleus.php(104): Nucleus\Core\Nucleus->{closure:{closure:Nucleus\Core\Nucleus::handle():99}:99}(Object(Nucleus\Http\Request))
+#8 /workspaces/nucleus/src/Core/Application.php(220): Nucleus\Core\Nucleus->handle(Object(Nucleus\Http\Request))
+#9 /workspaces/nucleus/src/Core/Application.php(204): Nucleus\Core\Application->handleRequest(Object(Nucleus\Http\Request))
+#10 /workspaces/nucleus/app/public/index.php(12): Nucleus\Core\Application->run()
+#11 {main}
+2025-09-18 08:23:10 INFO Application initialized. CONTEXT: basePath=/workspaces/nucleus/app env=local
+2025-09-18 08:23:10 ERROR Boom from controller CONTEXT: exception={} file=/workspaces/nucleus/app/Controllers/TestController.php line=13 trace=#0 [internal function]: App\Controllers\TestController->index(Object(Nucleus\Http\Request))
+#1 /workspaces/nucleus/src/Routing/RouteResolver.php(133): ReflectionMethod->invokeArgs(Object(App\Controllers\TestController), Array)
+#2 /workspaces/nucleus/src/Routing/RouteResolver.php(62): Nucleus\Routing\RouteResolver->resolveController(Array, Object(Nucleus\Http\Request), Array)
+#3 /workspaces/nucleus/src/Routing/Router.php(104): Nucleus\Routing\RouteResolver->resolve(Array, Object(Nucleus\Http\Request), Array)
+#4 /workspaces/nucleus/src/Core/Nucleus.php(100): Nucleus\Routing\Router->resolve(Array, Object(Nucleus\Http\Request), Array)
+#5 /workspaces/nucleus/app/Middleware/TestMiddleware.php(16): Nucleus\Core\Nucleus->{closure:Nucleus\Core\Nucleus::handle():100}(Object(Nucleus\Http\Request))
+#6 /workspaces/nucleus/src/Core/Nucleus.php(99): App\Middleware\TestMiddleware->handle(Object(Nucleus\Http\Request), Object(Closure))
+#7 /workspaces/nucleus/src/Core/Nucleus.php(104): Nucleus\Core\Nucleus->{closure:{closure:Nucleus\Core\Nucleus::handle():99}:99}(Object(Nucleus\Http\Request))
+#8 /workspaces/nucleus/src/Core/Application.php(220): Nucleus\Core\Nucleus->handle(Object(Nucleus\Http\Request))
+#9 /workspaces/nucleus/src/Core/Application.php(204): Nucleus\Core\Application->handleRequest(Object(Nucleus\Http\Request))
+#10 /workspaces/nucleus/app/public/index.php(12): Nucleus\Core\Application->run()
+#11 {main}
+2025-09-18 08:28:27 INFO 1 user providers loaded
+2025-09-18 08:28:27 INFO Application initialized. CONTEXT: basePath=/workspaces/nucleus/app env=local
+2025-09-18 08:28:27 ERROR Boom from controller CONTEXT: exception={} file=/workspaces/nucleus/app/Controllers/TestController.php line=13 trace=#0 [internal function]: App\Controllers\TestController->index(Object(Nucleus\Http\Request))
+#1 /workspaces/nucleus/src/Routing/RouteResolver.php(133): ReflectionMethod->invokeArgs(Object(App\Controllers\TestController), Array)
+#2 /workspaces/nucleus/src/Routing/RouteResolver.php(62): Nucleus\Routing\RouteResolver->resolveController(Array, Object(Nucleus\Http\Request), Array)
+#3 /workspaces/nucleus/src/Routing/Router.php(104): Nucleus\Routing\RouteResolver->resolve(Array, Object(Nucleus\Http\Request), Array)
+#4 /workspaces/nucleus/src/Core/Nucleus.php(100): Nucleus\Routing\Router->resolve(Array, Object(Nucleus\Http\Request), Array)
+#5 /workspaces/nucleus/app/Middleware/TestMiddleware.php(16): Nucleus\Core\Nucleus->{closure:Nucleus\Core\Nucleus::handle():100}(Object(Nucleus\Http\Request))
+#6 /workspaces/nucleus/src/Core/Nucleus.php(99): App\Middleware\TestMiddleware->handle(Object(Nucleus\Http\Request), Object(Closure))
+#7 /workspaces/nucleus/src/Core/Nucleus.php(104): Nucleus\Core\Nucleus->{closure:{closure:Nucleus\Core\Nucleus::handle():99}:99}(Object(Nucleus\Http\Request))
+#8 /workspaces/nucleus/src/Core/Application.php(226): Nucleus\Core\Nucleus->handle(Object(Nucleus\Http\Request))
+#9 /workspaces/nucleus/src/Core/Application.php(210): Nucleus\Core\Application->handleRequest(Object(Nucleus\Http\Request))
+#10 /workspaces/nucleus/app/public/index.php(12): Nucleus\Core\Application->run()
+#11 {main}
+2025-09-18 08:32:16 INFO 1 user providers loaded
+2025-09-18 08:32:16 INFO Error handler registered.
+2025-09-18 08:32:16 INFO 6 routes registered
+2025-09-18 08:32:16 INFO Application initialized. CONTEXT: basePath=/workspaces/nucleus/app env=local
+2025-09-18 08:32:16 ERROR Boom from controller CONTEXT: exception={} file=/workspaces/nucleus/app/Controllers/TestController.php line=13 trace=#0 [internal function]: App\Controllers\TestController->index(Object(Nucleus\Http\Request))
+#1 /workspaces/nucleus/src/Routing/RouteResolver.php(133): ReflectionMethod->invokeArgs(Object(App\Controllers\TestController), Array)
+#2 /workspaces/nucleus/src/Routing/RouteResolver.php(62): Nucleus\Routing\RouteResolver->resolveController(Array, Object(Nucleus\Http\Request), Array)
+#3 /workspaces/nucleus/src/Routing/Router.php(123): Nucleus\Routing\RouteResolver->resolve(Array, Object(Nucleus\Http\Request), Array)
+#4 /workspaces/nucleus/src/Core/Nucleus.php(100): Nucleus\Routing\Router->resolve(Array, Object(Nucleus\Http\Request), Array)
+#5 /workspaces/nucleus/app/Middleware/TestMiddleware.php(16): Nucleus\Core\Nucleus->{closure:Nucleus\Core\Nucleus::handle():100}(Object(Nucleus\Http\Request))
+#6 /workspaces/nucleus/src/Core/Nucleus.php(99): App\Middleware\TestMiddleware->handle(Object(Nucleus\Http\Request), Object(Closure))
+#7 /workspaces/nucleus/src/Core/Nucleus.php(104): Nucleus\Core\Nucleus->{closure:{closure:Nucleus\Core\Nucleus::handle():99}:99}(Object(Nucleus\Http\Request))
+#8 /workspaces/nucleus/src/Core/Application.php(231): Nucleus\Core\Nucleus->handle(Object(Nucleus\Http\Request))
+#9 /workspaces/nucleus/src/Core/Application.php(215): Nucleus\Core\Application->handleRequest(Object(Nucleus\Http\Request))
+#10 /workspaces/nucleus/app/public/index.php(12): Nucleus\Core\Application->run()
+#11 {main}
+2025-09-18 08:33:07 INFO 1 user providers loaded
+2025-09-18 08:33:07 INFO Error handler registered.
+2025-09-18 08:33:07 INFO 6 routes registered
+2025-09-18 08:33:07 INFO 1 global middlewares registered
+2025-09-18 08:33:07 INFO Application initialized. CONTEXT: basePath=/workspaces/nucleus/app env=local
+2025-09-18 08:33:07 ERROR Boom from controller CONTEXT: exception={} file=/workspaces/nucleus/app/Controllers/TestController.php line=13 trace=#0 [internal function]: App\Controllers\TestController->index(Object(Nucleus\Http\Request))
+#1 /workspaces/nucleus/src/Routing/RouteResolver.php(133): ReflectionMethod->invokeArgs(Object(App\Controllers\TestController), Array)
+#2 /workspaces/nucleus/src/Routing/RouteResolver.php(62): Nucleus\Routing\RouteResolver->resolveController(Array, Object(Nucleus\Http\Request), Array)
+#3 /workspaces/nucleus/src/Routing/Router.php(123): Nucleus\Routing\RouteResolver->resolve(Array, Object(Nucleus\Http\Request), Array)
+#4 /workspaces/nucleus/src/Core/Nucleus.php(100): Nucleus\Routing\Router->resolve(Array, Object(Nucleus\Http\Request), Array)
+#5 /workspaces/nucleus/app/Middleware/TestMiddleware.php(16): Nucleus\Core\Nucleus->{closure:Nucleus\Core\Nucleus::handle():100}(Object(Nucleus\Http\Request))
+#6 /workspaces/nucleus/src/Core/Nucleus.php(99): App\Middleware\TestMiddleware->handle(Object(Nucleus\Http\Request), Object(Closure))
+#7 /workspaces/nucleus/src/Core/Nucleus.php(104): Nucleus\Core\Nucleus->{closure:{closure:Nucleus\Core\Nucleus::handle():99}:99}(Object(Nucleus\Http\Request))
+#8 /workspaces/nucleus/src/Core/Application.php(233): Nucleus\Core\Nucleus->handle(Object(Nucleus\Http\Request))
+#9 /workspaces/nucleus/src/Core/Application.php(217): Nucleus\Core\Application->handleRequest(Object(Nucleus\Http\Request))
+#10 /workspaces/nucleus/app/public/index.php(12): Nucleus\Core\Application->run()
+#11 {main}
+2025-09-18 08:36:45 INFO 1 user providers loaded
+2025-09-18 08:36:45 INFO Error handler registered.
+2025-09-18 08:36:45 INFO 6 routes registered
+2025-09-18 08:36:45 INFO 1 global middlewares registered
+2025-09-18 08:36:45 INFO Application initialized. CONTEXT: basePath=/workspaces/nucleus/app env=local
+2025-09-18 08:36:45 ERROR Boom from controller CONTEXT: exception={} file=/workspaces/nucleus/app/Controllers/TestController.php line=13 trace=#0 [internal function]: App\Controllers\TestController->index(Object(Nucleus\Http\Request))
+#1 /workspaces/nucleus/src/Routing/RouteResolver.php(133): ReflectionMethod->invokeArgs(Object(App\Controllers\TestController), Array)
+#2 /workspaces/nucleus/src/Routing/RouteResolver.php(62): Nucleus\Routing\RouteResolver->resolveController(Array, Object(Nucleus\Http\Request), Array)
+#3 /workspaces/nucleus/src/Routing/Router.php(123): Nucleus\Routing\RouteResolver->resolve(Array, Object(Nucleus\Http\Request), Array)
+#4 /workspaces/nucleus/src/Core/Nucleus.php(100): Nucleus\Routing\Router->resolve(Array, Object(Nucleus\Http\Request), Array)
+#5 /workspaces/nucleus/app/Middleware/TestMiddleware.php(16): Nucleus\Core\Nucleus->{closure:Nucleus\Core\Nucleus::handle():100}(Object(Nucleus\Http\Request))
+#6 /workspaces/nucleus/src/Core/Nucleus.php(99): App\Middleware\TestMiddleware->handle(Object(Nucleus\Http\Request), Object(Closure))
+#7 /workspaces/nucleus/src/Core/Nucleus.php(104): Nucleus\Core\Nucleus->{closure:{closure:Nucleus\Core\Nucleus::handle():99}:99}(Object(Nucleus\Http\Request))
+#8 /workspaces/nucleus/src/Core/Application.php(244): Nucleus\Core\Nucleus->handle(Object(Nucleus\Http\Request))
+#9 /workspaces/nucleus/src/Core/Application.php(217): Nucleus\Core\Application->handleRequest(Object(Nucleus\Http\Request))
+#10 /workspaces/nucleus/app/public/index.php(12): Nucleus\Core\Application->run()
+#11 {main}
+2025-09-18 08:36:45 INFO Request handled CONTEXT: method=GET uri={} status=500 duration_ms=0.37
+2025-09-18 08:39:09 INFO 1 user providers loaded
+2025-09-18 08:39:09 INFO Error handler registered.
+2025-09-18 08:39:09 INFO 6 routes registered
+2025-09-18 08:39:09 INFO 1 global middlewares registered
+2025-09-18 08:39:09 INFO Application initialized. CONTEXT: basePath=/workspaces/nucleus/app env=local
+2025-09-18 08:39:09 ERROR Boom from controller CONTEXT: exception={} file=/workspaces/nucleus/app/Controllers/TestController.php line=13 trace=#0 [internal function]: App\Controllers\TestController->index(Object(Nucleus\Http\Request))
+#1 /workspaces/nucleus/src/Routing/RouteResolver.php(133): ReflectionMethod->invokeArgs(Object(App\Controllers\TestController), Array)
+#2 /workspaces/nucleus/src/Routing/RouteResolver.php(62): Nucleus\Routing\RouteResolver->resolveController(Array, Object(Nucleus\Http\Request), Array)
+#3 /workspaces/nucleus/src/Routing/Router.php(123): Nucleus\Routing\RouteResolver->resolve(Array, Object(Nucleus\Http\Request), Array)
+#4 /workspaces/nucleus/src/Core/Nucleus.php(100): Nucleus\Routing\Router->resolve(Array, Object(Nucleus\Http\Request), Array)
+#5 /workspaces/nucleus/app/Middleware/TestMiddleware.php(16): Nucleus\Core\Nucleus->{closure:Nucleus\Core\Nucleus::handle():100}(Object(Nucleus\Http\Request))
+#6 /workspaces/nucleus/src/Core/Nucleus.php(99): App\Middleware\TestMiddleware->handle(Object(Nucleus\Http\Request), Object(Closure))
+#7 /workspaces/nucleus/src/Core/Nucleus.php(104): Nucleus\Core\Nucleus->{closure:{closure:Nucleus\Core\Nucleus::handle():99}:99}(Object(Nucleus\Http\Request))
+#8 /workspaces/nucleus/src/Core/Application.php(244): Nucleus\Core\Nucleus->handle(Object(Nucleus\Http\Request))
+#9 /workspaces/nucleus/src/Core/Application.php(217): Nucleus\Core\Application->handleRequest(Object(Nucleus\Http\Request))
+#10 /workspaces/nucleus/app/public/index.php(12): Nucleus\Core\Application->run()
+#11 {main}
+2025-09-18 08:39:09 INFO Request handled CONTEXT: method=GET uri=/ status=500 duration_ms=1.11
+2025-09-18 08:41:07 INFO 1 user providers loaded
+2025-09-18 08:41:07 INFO Error handler registered.
+2025-09-18 08:41:07 INFO 6 routes registered
+2025-09-18 08:41:07 INFO 1 global middlewares registered
+2025-09-18 08:41:07 INFO Application initialized.\nCONTEXT: basePath=/workspaces/nucleus/app env=local
+2025-09-18 08:41:07 ERROR Boom from controller\nCONTEXT: exception={} file=/workspaces/nucleus/app/Controllers/TestController.php line=13 trace=#0 [internal function]: App\Controllers\TestController->index(Object(Nucleus\Http\Request))
+#1 /workspaces/nucleus/src/Routing/RouteResolver.php(133): ReflectionMethod->invokeArgs(Object(App\Controllers\TestController), Array)
+#2 /workspaces/nucleus/src/Routing/RouteResolver.php(62): Nucleus\Routing\RouteResolver->resolveController(Array, Object(Nucleus\Http\Request), Array)
+#3 /workspaces/nucleus/src/Routing/Router.php(123): Nucleus\Routing\RouteResolver->resolve(Array, Object(Nucleus\Http\Request), Array)
+#4 /workspaces/nucleus/src/Core/Nucleus.php(100): Nucleus\Routing\Router->resolve(Array, Object(Nucleus\Http\Request), Array)
+#5 /workspaces/nucleus/app/Middleware/TestMiddleware.php(16): Nucleus\Core\Nucleus->{closure:Nucleus\Core\Nucleus::handle():100}(Object(Nucleus\Http\Request))
+#6 /workspaces/nucleus/src/Core/Nucleus.php(99): App\Middleware\TestMiddleware->handle(Object(Nucleus\Http\Request), Object(Closure))
+#7 /workspaces/nucleus/src/Core/Nucleus.php(104): Nucleus\Core\Nucleus->{closure:{closure:Nucleus\Core\Nucleus::handle():99}:99}(Object(Nucleus\Http\Request))
+#8 /workspaces/nucleus/src/Core/Application.php(244): Nucleus\Core\Nucleus->handle(Object(Nucleus\Http\Request))
+#9 /workspaces/nucleus/src/Core/Application.php(217): Nucleus\Core\Application->handleRequest(Object(Nucleus\Http\Request))
+#10 /workspaces/nucleus/app/public/index.php(12): Nucleus\Core\Application->run()
+#11 {main}
+2025-09-18 08:41:07 INFO Request handled\nCONTEXT: method=GET uri=/ status=500 duration_ms=0.31

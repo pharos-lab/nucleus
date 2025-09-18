@@ -69,6 +69,25 @@ class Router implements RouterInterface
     }
 
     /**
+     * Get all registered routes.
+     *
+     * @return array<string, Route[]>
+     */
+    public function getRoutes(): array
+    {
+        return $this->routes;
+    }
+
+    public function getRoutesCount(): int
+    {
+        $count = 0;
+        foreach ($this->routes as $methodRoutes) {
+            $count += count($methodRoutes);
+        }
+        return $count;
+    }
+
+    /**
      * Dispatch a PSR-7 request and return the matched route.
      *
      * @param NucleusRequestInterface $request

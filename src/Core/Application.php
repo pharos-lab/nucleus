@@ -7,6 +7,7 @@ namespace Nucleus\Core;
 use Nucleus\Config\Config;
 use Nucleus\Config\Environment;
 use Nucleus\Container\Container;
+use Nucleus\Contracts\NucleusLoggerInterface;
 use Nucleus\Core\Bootstrap\NucleusProvider;
 use Nucleus\Exceptions\ErrorHandler;
 use Nucleus\Http\Request;
@@ -59,6 +60,8 @@ class Application
      */
     protected array $middlewares = [];
 
+    protected NucleusLoggerInterface $logger;
+
     /**
      * Application constructor.
      *
@@ -70,6 +73,11 @@ class Application
         $this->container = new Container();
 
         $this->bootstrap();
+
+        $this->logger->info("Application initialized.", [
+            'basePath' => $this->basePath,
+            'env' => Environment::get('APP_ENV', 'production')
+        ]);
     }
 
     /**
@@ -90,14 +98,28 @@ class Application
         //Load environment variables from .env
         Environment::load($this->basePath . '/.env');
         $this->loadConfig();
+
         $this->registerCoreBindings();
+
+        $this->logger = $this->container->make(NucleusLoggerInterface::class);
+
         $this->registerUserBindings();
+
+        $this->logger->info("{count} user providers loaded", ['count' => count($this->config->get('app.providers', []))]);
+
         $this->registerErrorHandling();
+
+        $this->logger->info("Error handler registered.");
 
         $this->router = $this->container->make(Router::class);
 
         $this->registerRoutes();
+
+        $this->logger->info("{count} routes registered", ['count' => $this->router->getRoutesCount()]);
+
         $this->middlewares = $this->registerGlobalMiddlewares();
+
+        $this->logger->info("{count} global middlewares registered", ['count' => count($this->middlewares)]);
     }
 
     /**
@@ -189,7 +211,21 @@ class Application
     public function run(): void
     {
         $request = $this->container->make(Request::class);
+
+        $start = microtime(true);
+
         $response = $this->handleRequest($request);
+
+        $duration = round((microtime(true) - $start) * 1000, 2);
+
+        // Log request/response
+        $this->logger->info('Request handled', [
+            'method' => $request->getMethod(),
+            'uri' => $request->getUri()->getPath(),
+            'status' => $response->getStatusCode(),
+            'duration_ms' => $duration
+        ]);
+
         $response->send();
     }
 

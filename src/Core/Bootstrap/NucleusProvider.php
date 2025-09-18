@@ -51,7 +51,7 @@ class NucleusProvider extends Provider
 
 			return match ($driver) {
                 'single' => new FileLogger(
-                    $this->app->getBasePath() . '/' . dirname($driverConfig['path']),
+                    $this->app->getBasePath() . '/' . $driverConfig['path'],
                     $driverConfig['level'] ?? 'debug'
                 ),
                 'daily' => new DailyFileLogger(

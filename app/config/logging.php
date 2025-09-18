@@ -7,7 +7,7 @@ return [
     
     'drivers' => [
         'single' => [
-            'path' => 'storage/logs/app.log',
+            'path' => Environment::get('LOG_PATH', 'storage/logs/app.log'),
             'level' => Environment::get('LOG_LEVEL', 'debug'),
         ],
         'daily' => [
