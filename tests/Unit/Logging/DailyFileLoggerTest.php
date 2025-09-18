@@ -28,7 +28,7 @@ class DailyFileLoggerTest extends TestCase
     /** @test */
     public function testItWriteLogsInDailyFile(): void
     {
-        $logger = new DailyFileLogger($this->logDir, 7);
+        $logger = new DailyFileLogger($this->logDir, 'debug', 7);
 
         $logger->info('Hello world');
 
@@ -42,7 +42,7 @@ class DailyFileLoggerTest extends TestCase
     /** @test */
     public function testMultipleLogsInTheSameLogFile()
     {
-        $logger = new DailyFileLogger($this->logDir, 7);
+        $logger = new DailyFileLogger($this->logDir, 'debug', 7);
 
         $logger->info('First log');
         $logger->error('Second log');
@@ -62,7 +62,7 @@ class DailyFileLoggerTest extends TestCase
     /** @test */
     public function testItRotateFileByDate()
     {
-        $logger = new DailyFileLogger($this->logDir, 7);
+        $logger = new DailyFileLogger($this->logDir, 'debug', 7);
 
         // Simuler deux jours différents en modifiant la méthode getLogFilePath via reflection ou helper
         $yesterday = date('Y-m-d', strtotime('-1 day'));
@@ -85,7 +85,7 @@ class DailyFileLoggerTest extends TestCase
     public function testItRomovesOldLogFileByDate()
     {
         // On ne garde qu’1 jour
-        $logger = new DailyFileLogger($this->logDir, 1);
+        $logger = new DailyFileLogger($this->logDir, 'debug', 1);
 
         $old = date('Y-m-d', strtotime('-5 days'));
         $oldFile = "{$this->logDir}/app-{$old}.log";
@@ -100,7 +100,7 @@ class DailyFileLoggerTest extends TestCase
     public function testItKeepsFileInRetention()
     {
         // On garde 7 jours
-        $logger = new DailyFileLogger($this->logDir, 7);
+        $logger = new DailyFileLogger($this->logDir, 'debug', 7);
 
         $recent = date('Y-m-d', strtotime('-2 days'));
         $recentFile = "{$this->logDir}/app-{$recent}.log";

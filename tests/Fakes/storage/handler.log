@@ -1,4 +1,4 @@
-2025-09-17 11:38:31 ERROR Boom Local CONTEXT: exception={} file=/workspaces/nucleus/tests/Unit/ErrorHandlerTest.php line=34 trace=#0 /workspaces/nucleus/vendor/phpunit/phpunit/src/Framework/TestCase.php(1316): ErrorHandlerTest->testHandleExceptionReturnsResponseInLocalEnvironment()
+2025-09-17 11:41:23 ERROR Boom Local CONTEXT: exception={} file=/workspaces/nucleus/tests/Unit/ErrorHandlerTest.php line=34 trace=#0 /workspaces/nucleus/vendor/phpunit/phpunit/src/Framework/TestCase.php(1316): ErrorHandlerTest->testHandleExceptionReturnsResponseInLocalEnvironment()
 #1 /workspaces/nucleus/vendor/phpunit/phpunit/src/Framework/TestCase.php(516): PHPUnit\Framework\TestCase->runTest()
 #2 /workspaces/nucleus/vendor/phpunit/phpunit/src/Framework/TestRunner/TestRunner.php(99): PHPUnit\Framework\TestCase->runBare()
 #3 /workspaces/nucleus/vendor/phpunit/phpunit/src/Framework/TestCase.php(357): PHPUnit\Framework\TestRunner->run(Object(ErrorHandlerTest))
@@ -9,7 +9,7 @@
 #8 /workspaces/nucleus/vendor/phpunit/phpunit/phpunit(104): PHPUnit\TextUI\Application->run(Array)
 #9 /workspaces/nucleus/vendor/bin/phpunit(122): include('/workspaces/nuc...')
 #10 {main}
-2025-09-17 11:38:31 ERROR Boom Prod CONTEXT: exception={} file=/workspaces/nucleus/tests/Unit/ErrorHandlerTest.php line=48 trace=#0 /workspaces/nucleus/vendor/phpunit/phpunit/src/Framework/TestCase.php(1316): ErrorHandlerTest->testHandleExceptionReturnsGenericResponseInProduction()
+2025-09-17 11:41:23 ERROR Boom Prod CONTEXT: exception={} file=/workspaces/nucleus/tests/Unit/ErrorHandlerTest.php line=48 trace=#0 /workspaces/nucleus/vendor/phpunit/phpunit/src/Framework/TestCase.php(1316): ErrorHandlerTest->testHandleExceptionReturnsGenericResponseInProduction()
 #1 /workspaces/nucleus/vendor/phpunit/phpunit/src/Framework/TestCase.php(516): PHPUnit\Framework\TestCase->runTest()
 #2 /workspaces/nucleus/vendor/phpunit/phpunit/src/Framework/TestRunner/TestRunner.php(99): PHPUnit\Framework\TestCase->runBare()
 #3 /workspaces/nucleus/vendor/phpunit/phpunit/src/Framework/TestCase.php(357): PHPUnit\Framework\TestRunner->run(Object(ErrorHandlerTest))
@@ -20,4 +20,4 @@
 #8 /workspaces/nucleus/vendor/phpunit/phpunit/phpunit(104): PHPUnit\TextUI\Application->run(Array)
 #9 /workspaces/nucleus/vendor/bin/phpunit(122): include('/workspaces/nuc...')
 #10 {main}
-2025-09-17 11:38:31 WARNING Test warning CONTEXT: severity=512 file=/workspaces/nucleus/tests/Unit/ErrorHandlerTest.php line=63
+2025-09-17 11:41:23 WARNING Test warning CONTEXT: severity=512 file=/workspaces/nucleus/tests/Unit/ErrorHandlerTest.php line=63

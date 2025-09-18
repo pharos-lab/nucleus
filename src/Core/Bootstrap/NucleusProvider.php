@@ -10,6 +10,7 @@ use Nucleus\Routing\Router;
 use Nucleus\Routing\RouteResolver;
 use Nucleus\View\View;
 use Nucleus\Http\Request;
+use Nucleus\Logging\DailyFileLogger;
 use Nucleus\Logging\FileLogger;
 use Nucleus\Logging\NullLogger;
 
@@ -45,14 +46,26 @@ class NucleusProvider extends Provider
 
         // Logger
         $this->container->bind(NucleusLoggerInterface::class, function () {
-            $driver = $this->app->getConfig()->get('logging.driver', 'file');
+            $driver = $this->app->getConfig()->get('logging.driver', 'daily');
+            $driverConfig = $this->app->getConfig()->get('logging.drivers')[$driver] ?? [];
+
 			return match ($driver) {
-				'null' => new NullLogger(),
-				default => new FileLogger(
-					$this->basePath . $this->app->getConfig()->get('logging.path', 'storage/logs/app.log'),
-                    $this->app->getConfig()->get('logging.level', 'debug')
-				),
-			};
+                'single' => new FileLogger(
+                    $this->app->getBasePath() . '/' . dirname($driverConfig['path']),
+                    $driverConfig['level'] ?? 'debug'
+                ),
+                'daily' => new DailyFileLogger(
+                    $this->app->getBasePath() . '/' . $driverConfig['path'],
+                    $driverConfig['level'] ?? 'debug',
+                    $driverConfig['days'] ?? 7
+                ),
+                'null' => new NullLogger(),
+                default => new DailyFileLogger(
+                    $this->app->getBasePath() . '/storage/logs',
+                    $driverConfig['level'] ?? 'debug',
+                    $driverConfig['days'] ?? 7
+                ),
+            };
 		});
 
         //  errors Handler

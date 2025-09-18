@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Nucleus\Logging;
 
+use Nucleus\Contracts\NucleusLoggerInterface;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
 
@@ -14,7 +15,7 @@ use Psr\Log\LogLevel;
  * - Any context keys that are not used as placeholders are appended as `key=value`.
  * - Uses PSR-3 AbstractLogger so standard level helpers are available.
  */
-class FileLogger extends AbstractLogger
+class FileLogger extends AbstractLogger implements NucleusLoggerInterface
 {
     /**
      * Path to the log file.

@@ -22,6 +22,7 @@ final class ApplicationLoggerIntegrationTest extends TestCase
         }
 
         $this->logFile = $basePath . '/storage/logs/app.log';
+        
         if (file_exists($this->logFile)) {
             unlink($this->logFile);
         }

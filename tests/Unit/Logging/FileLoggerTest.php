@@ -7,13 +7,13 @@ use Nucleus\Logging\FileLogger;
 use Nucleus\Logging\NullLogger;
 use Psr\Log\LogLevel;
 
-class LoggerTest extends TestCase
+class FileLoggerTest extends TestCase
 {
     protected string $logFile;
 
     protected function setUp(): void
     {
-        $this->logFile = __DIR__ . '/../../Fakes/storage/logs/test.log';
+        $this->logFile = __DIR__ . '/../../Fakes/storage/logs/file-test.log';
 
         if (file_exists($this->logFile)) {
             unlink($this->logFile);
@@ -75,8 +75,7 @@ class LoggerTest extends TestCase
         $logger->success('Operation completed');
 
         $content = file_get_contents($this->logFile);
-
-        var_dump($content); // Debug output to verify log content
+        
         $this->assertStringContainsString('SUCCESS', $content);
         $this->assertStringContainsString('Operation completed', $content);
     }
