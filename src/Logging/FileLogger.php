@@ -99,7 +99,7 @@ class FileLogger extends AbstractLogger implements NucleusLoggerInterface
         // Format remaining context as key=value pairs (simple scalar or json for complex)
         $extra = $this->formatRemainingContext($context);
 
-        $line = date('Y-m-d H:i:s') . ' ' . $levelStr . ' ' . $messageStr . ($extra !== '' ? '\nCONTEXT: ' . $extra : '') . PHP_EOL;
+        $line = date('Y-m-d H:i:s') . ' ' . $levelStr . ' ' . $messageStr . ($extra !== '' ? "\nCONTEXT: " . $extra : '') . PHP_EOL;
 
         // Ensure directory exists
         $dir = dirname($this->filePath);
@@ -174,6 +174,6 @@ class FileLogger extends AbstractLogger implements NucleusLoggerInterface
             $parts[] = $k . '=' . $this->stringify($v);
         }
 
-        return implode(' ', $parts);
+        return "\n" . implode("\n", array_map(fn($line) => '    ' . $line, $parts));
     }
 }
