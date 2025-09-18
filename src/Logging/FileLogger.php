@@ -121,9 +121,8 @@ class FileLogger extends AbstractLogger implements NucleusLoggerInterface
      */
     public function withContext(array $context): static
     {
-        $clone = clone $this;
-        $clone->defaultContext = array_merge($this->defaultContext, $context);
-        return $clone;
+        $this->defaultContext = array_merge($this->defaultContext, $context);
+        return $this;
     }
 
     /**
@@ -176,4 +175,9 @@ class FileLogger extends AbstractLogger implements NucleusLoggerInterface
 
         return "\n" . implode("\n", array_map(fn($line) => '    ' . $line, $parts));
     }
+
+    public function getDefaultContext(): array
+    {
+        return $this->defaultContext;
+    }   
 }

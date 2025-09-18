@@ -45,7 +45,7 @@ class NucleusProvider extends Provider
         $this->container->bind(Request::class, fn() => Request::capture());
 
         // Logger
-        $this->container->bind(NucleusLoggerInterface::class, function () {
+        $this->container->singleton(NucleusLoggerInterface::class, function () {
             $driver = $this->app->getConfig()->get('logging.driver', 'daily');
             $driverConfig = $this->app->getConfig()->get('logging.drivers')[$driver] ?? [];
 

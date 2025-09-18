@@ -60,6 +60,11 @@ class Application
      */
     protected array $middlewares = [];
 
+    /**
+     * Logger instance.
+     *
+     * @var NucleusLoggerInterface
+     */
     protected NucleusLoggerInterface $logger;
 
     /**

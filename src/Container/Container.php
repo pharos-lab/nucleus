@@ -18,6 +18,16 @@ class Container implements ContainerInterface
     protected array $bindings = [];
 
     /**
+     * @var array<string, mixed> Stores the resolved instances (singleton behavior)
+     */
+    protected array $instances = [];
+
+    /**
+     * @var array<string, mixed> Stores singleton bindings
+     */
+    protected array $singletons = [];
+
+    /**
      * Bind an abstract type (interface or class) to a factory closure.
      *
      * @param string $abstract The interface or class name.
@@ -26,6 +36,12 @@ class Container implements ContainerInterface
     public function bind(string $abstract, callable $factory)
     {
         $this->bindings[$abstract] = $factory;
+    }
+
+    public function singleton(string $abstract, callable $factory)
+    {
+        $this->bindings[$abstract] = $factory;
+        $this->singletons[$abstract] = true;
     }
 
     /**
@@ -38,7 +54,16 @@ class Container implements ContainerInterface
      */
     public function make(string $class)
     {
+        if (isset($this->instances[$class])) {
+            return $this->instances[$class];
+        }
+
         if (isset($this->bindings[$class])) {
+            if (isset($this->singletons[$class])) {
+                $this->instances[$class] = $this->bindings[$class]($this);
+                return $this->instances[$class];
+            }
+            
             return $this->bindings[$class]($this);
         }
 
@@ -51,14 +76,15 @@ class Container implements ContainerInterface
 
         $params = [];
         foreach ($constructor->getParameters() as $param) {
-            $paramClass = $param->getType()?->getName();
+            $paramClass = $param->getType();
+            var_dump($paramClass);
             
-            if ($paramClass) {
-                $params[] = $this->make($paramClass);
-            } elseif ($param->isDefaultValueAvailable()) {
+            if ($param->isDefaultValueAvailable()) {
                 $params[] = $param->getDefaultValue();
+            } elseif (!$paramClass->isBuiltin()) {
+                $params[] = $this->make($paramClass->getName());
             } else {
-                $params[] = null;
+                throw new \Exception("Cannot resolve parameter \${$param->getName()} for class {$class}");
             }
         }
 

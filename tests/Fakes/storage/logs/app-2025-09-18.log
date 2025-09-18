@@ -1,1 +1,169 @@
-2025-09-18 07:35:47 INFO New log
+2025-09-18 11:32:28 INFO New log
+2025-09-18 11:32:28 INFO 1 user providers loaded
+2025-09-18 11:32:28 INFO Error handler registered.
+2025-09-18 11:32:28 INFO 0 routes registered
+2025-09-18 11:32:28 INFO 1 global middlewares registered
+2025-09-18 11:32:28 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/tests/Unit/Nucleus/../../Fakes
+    env=testing
+2025-09-18 11:32:28 INFO 1 user providers loaded
+2025-09-18 11:32:28 INFO Error handler registered.
+2025-09-18 11:32:28 INFO 0 routes registered
+2025-09-18 11:32:28 INFO 1 global middlewares registered
+2025-09-18 11:32:28 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/tests/Unit/Nucleus/../../Fakes
+    env=testing
+2025-09-18 11:32:28 INFO 1 user providers loaded
+2025-09-18 11:32:28 INFO Error handler registered.
+2025-09-18 11:32:28 INFO 0 routes registered
+2025-09-18 11:32:28 INFO 1 global middlewares registered
+2025-09-18 11:32:28 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/tests/Unit/Nucleus/../../Fakes
+    env=testing
+2025-09-18 11:32:28 INFO 1 user providers loaded
+2025-09-18 11:32:28 INFO Error handler registered.
+2025-09-18 11:32:28 INFO 0 routes registered
+2025-09-18 11:32:28 INFO 1 global middlewares registered
+2025-09-18 11:32:28 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/tests/Unit/Nucleus/../../Fakes
+    env=testing
+2025-09-18 11:32:28 INFO 1 user providers loaded
+2025-09-18 11:32:28 INFO Error handler registered.
+2025-09-18 11:32:28 INFO 0 routes registered
+2025-09-18 11:32:28 INFO 1 global middlewares registered
+2025-09-18 11:32:28 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/tests/Unit/Nucleus/../../Fakes
+    env=testing
+2025-09-18 11:32:28 INFO 1 user providers loaded
+2025-09-18 11:32:28 INFO Error handler registered.
+2025-09-18 11:32:28 INFO 0 routes registered
+2025-09-18 11:32:28 INFO 1 global middlewares registered
+2025-09-18 11:32:28 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/tests/Unit/Nucleus/../../Fakes
+    env=testing
+2025-09-18 11:32:28 INFO 1 user providers loaded
+2025-09-18 11:32:28 INFO Error handler registered.
+2025-09-18 11:32:28 INFO 0 routes registered
+2025-09-18 11:32:28 INFO 1 global middlewares registered
+2025-09-18 11:32:28 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/tests/Unit/Nucleus/../../Fakes
+    env=testing
+2025-09-18 11:32:28 INFO 1 user providers loaded
+2025-09-18 11:32:28 INFO Error handler registered.
+2025-09-18 11:32:28 INFO 0 routes registered
+2025-09-18 11:32:28 INFO 1 global middlewares registered
+2025-09-18 11:32:28 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/tests/Unit/Nucleus/../../Fakes
+    env=testing
+2025-09-18 11:32:28 INFO 1 user providers loaded
+2025-09-18 11:32:28 INFO Error handler registered.
+2025-09-18 11:32:28 INFO 0 routes registered
+2025-09-18 11:32:28 INFO 1 global middlewares registered
+2025-09-18 11:32:28 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/tests/Unit/Routing/../../Fakes
+    env=testing
+2025-09-18 11:32:28 INFO 1 user providers loaded
+2025-09-18 11:32:28 INFO Error handler registered.
+2025-09-18 11:32:28 INFO 0 routes registered
+2025-09-18 11:32:28 INFO 1 global middlewares registered
+2025-09-18 11:32:28 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/tests/Unit/Routing/../../Fakes
+    env=testing
+2025-09-18 11:32:28 INFO 1 user providers loaded
+2025-09-18 11:32:28 INFO Error handler registered.
+2025-09-18 11:32:28 INFO 0 routes registered
+2025-09-18 11:32:28 INFO 1 global middlewares registered
+2025-09-18 11:32:28 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/tests/Unit/Routing/../../Fakes
+    env=testing
+2025-09-18 11:32:28 INFO 1 user providers loaded
+2025-09-18 11:32:28 INFO Error handler registered.
+2025-09-18 11:32:28 INFO 0 routes registered
+2025-09-18 11:32:28 INFO 1 global middlewares registered
+2025-09-18 11:32:28 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/tests/Unit/Routing/../../Fakes
+    env=testing
+2025-09-18 11:32:28 INFO 1 user providers loaded
+2025-09-18 11:32:28 INFO Error handler registered.
+2025-09-18 11:32:28 INFO 0 routes registered
+2025-09-18 11:32:28 INFO 1 global middlewares registered
+2025-09-18 11:32:28 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/tests/Unit/Routing/../../Fakes
+    env=testing
+2025-09-18 11:32:28 INFO 1 user providers loaded
+2025-09-18 11:32:28 INFO Error handler registered.
+2025-09-18 11:32:28 INFO 0 routes registered
+2025-09-18 11:32:28 INFO 1 global middlewares registered
+2025-09-18 11:32:28 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/tests/Unit/Routing/../../Fakes
+    env=testing
+2025-09-18 11:32:28 INFO 1 user providers loaded
+2025-09-18 11:32:28 INFO Error handler registered.
+2025-09-18 11:32:28 INFO 0 routes registered
+2025-09-18 11:32:28 INFO 1 global middlewares registered
+2025-09-18 11:32:28 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/tests/Unit/Routing/../../Fakes
+    env=testing
+2025-09-18 11:32:28 INFO 1 user providers loaded
+2025-09-18 11:32:28 INFO Error handler registered.
+2025-09-18 11:32:28 INFO 0 routes registered
+2025-09-18 11:32:28 INFO 1 global middlewares registered
+2025-09-18 11:32:28 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/tests/Unit/Routing/../../Fakes
+    env=testing
+2025-09-18 11:32:28 INFO 1 user providers loaded
+2025-09-18 11:32:28 INFO Error handler registered.
+2025-09-18 11:32:28 INFO 0 routes registered
+2025-09-18 11:32:28 INFO 1 global middlewares registered
+2025-09-18 11:32:28 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/tests/Unit/Routing/../../Fakes
+    env=testing
+2025-09-18 11:32:28 INFO 1 user providers loaded
+2025-09-18 11:32:28 INFO Error handler registered.
+2025-09-18 11:32:28 INFO 0 routes registered
+2025-09-18 11:32:28 INFO 1 global middlewares registered
+2025-09-18 11:32:28 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/tests/Unit/Routing/../../Fakes
+    env=testing
+2025-09-18 11:32:28 INFO 1 user providers loaded
+2025-09-18 11:32:28 INFO Error handler registered.
+2025-09-18 11:32:28 INFO 0 routes registered
+2025-09-18 11:32:28 INFO 1 global middlewares registered
+2025-09-18 11:32:28 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/tests/Unit/Routing/../../Fakes
+    env=testing
+2025-09-18 11:32:28 INFO 1 user providers loaded
+2025-09-18 11:32:28 INFO Error handler registered.
+2025-09-18 11:32:28 INFO 0 routes registered
+2025-09-18 11:32:28 INFO 1 global middlewares registered
+2025-09-18 11:32:28 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/tests/Unit/Routing/../../Fakes
+    env=testing
+2025-09-18 11:32:28 INFO 1 user providers loaded
+2025-09-18 11:32:28 INFO Error handler registered.
+2025-09-18 11:32:28 INFO 0 routes registered
+2025-09-18 11:32:28 INFO 1 global middlewares registered
+2025-09-18 11:32:28 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/tests/Unit/Routing/../../Fakes
+    env=testing
