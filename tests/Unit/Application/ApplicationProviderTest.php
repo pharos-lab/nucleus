@@ -24,7 +24,7 @@ class ApplicationProviderTest extends TestCase
 
     public function test_it_ignores_non_existing_providers()
     {
-        $app = new Application(__DIR__ . '/../Fakes');
+        $app = new Application(__DIR__ . '/../../Fakes');
 
         // le container doit rester vide (ou au moins ne pas contenir foo)
         $this->assertFalse($app->getContainer()->has('bar'));

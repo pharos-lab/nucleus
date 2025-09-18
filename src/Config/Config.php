@@ -36,13 +36,34 @@ class Config
      */
     public function __construct(string $path)
     {
-        $files = glob(rtrim($path, '/') . '/*.php');
+        $path = rtrim($path, '/');
+
+        // Validate the config path
+        if (!is_dir($path)) {
+            throw new \InvalidArgumentException("Config path '{$path}' does not exist or is not a directory.");
+        }
+
+        $files = glob($path . '/*.php');
+
+        // Ensure at least one config file is found
+        if (empty($files)) {
+            throw new \RuntimeException("No configuration files found in '{$path}'. At least one .php file is required.");
+        }
 
         foreach ($files as $file) {
+            if (!is_readable($file)) {
+                throw new \RuntimeException("Configuration file '{$file}' is not readable.");
+            }
+
             $key = basename($file, '.php');
             $this->items[$key] = require $file;
+
+            if (!is_array($this->items[$key])) {
+                throw new \RuntimeException("Configuration file '{$file}' must return an array.");
+            }
         }
     }
+
 
     /**
      * Get a configuration value using dot notation.
