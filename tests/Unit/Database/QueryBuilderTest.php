@@ -2,81 +2,111 @@
 
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
 use Nucleus\Database\Connection;
+use PHPUnit\Framework\TestCase;
 use Nucleus\Database\QueryBuilder;
+use PDO;
 
 class QueryBuilderTest extends TestCase
 {
-    protected Connection $conn;
+    private connection $connection;
 
     protected function setUp(): void
     {
-        $this->conn = new Connection('sqlite::memory:');
-        $this->conn->getPdo()->exec(
-            'CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER)'
+        // SQLite en mémoire
+        $this->connection = new Connection('sqlite::memory:');
+
+        // Création d’une table fictive
+        $this->connection->getPdo()->exec("
+            CREATE TABLE users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                email TEXT NOT NULL
+            )
+        ");
+    }
+
+    public function testSelectQueryBuilding()
+    {
+        $qb = new QueryBuilder($this->connection);
+        $sql = $qb->table('users')->select(['id', 'name'])->getQuery();
+
+        $this->assertSame(
+            "SELECT id, name FROM users",
+            $sql
         );
     }
 
-    public function test_insert_inserts_row()
+    public function testWhereClauseBuilding()
     {
-        $qb = new QueryBuilder($this->conn);
-        $qb->table('users')->insert([
+        $qb = new QueryBuilder($this->connection);
+        $sql = $qb->table('users')
+            ->select()
+            ->where('id', '=', 1)
+            ->getQuery();
+
+        $this->assertSame(
+            "SELECT * FROM users WHERE id = :wid0",
+            $sql
+        );
+    }
+
+    public function testInsertAndFetch()
+    {
+        $qb = new QueryBuilder($this->connection);
+        $id = $qb->table('users')->insert([
             'name' => 'Alice',
-            'age' => 30,
+            'email' => 'alice@example.com'
         ]);
 
-        $rows = $this->conn->getPdo()
-            ->query('SELECT * FROM users')
-            ->fetchAll(PDO::FETCH_ASSOC);
+        $this->assertSame(1, $id);
 
-        $this->assertCount(1, $rows);
-        $this->assertEquals('Alice', $rows[0]['name']);
+        $users = $qb->table('users')->select()->get();
+        $this->assertCount(1, $users);
+        $this->assertSame('Alice', $users[0]->name);
     }
 
-    public function test_select_returns_matching_rows()
+    public function testUpdate()
     {
-        $this->conn->getPdo()->exec("INSERT INTO users (name, age) VALUES ('Bob', 25)");
+        $qb = new QueryBuilder($this->connection);
 
-        $qb = new QueryBuilder($this->conn);
-        $rows = $qb->table('users')
-            ->select(['id', 'name'])
-            ->where('age', '>=', 20)
-            ->get();
+        // Insert initial
+        $qb->table('users')->insert([
+            'name' => 'Bob',
+            'email' => 'bob@example.com'
+        ]);
 
-        $this->assertCount(1, $rows);
-        $this->assertEquals('Bob', $rows[0]['name']);
+        // Update
+        $affected = $qb->table('users')
+            ->where('name', '=', 'Bob')
+            ->update(['email' => 'bobby@example.com']);
+
+        $this->assertSame(1, $affected);
+
+        // Vérifie
+        $users = $qb->table('users')->select()->get();
+        $this->assertSame('bobby@example.com', $users[0]->email);
     }
 
-    public function test_update_updates_rows()
+    public function testDelete()
     {
-        $this->conn->getPdo()->exec("INSERT INTO users (name, age) VALUES ('Charlie', 40)");
+        $qb = new QueryBuilder($this->connection);
 
-        $qb = new QueryBuilder($this->conn);
-        $qb->table('users')
+        // Insert
+        $qb->table('users')->insert([
+            'name' => 'Charlie',
+            'email' => 'charlie@example.com'
+        ]);
+
+        // Delete
+        $deleted = $qb->table('users')
             ->where('name', '=', 'Charlie')
-            ->update(['age' => 41]);
-
-        $rows = $this->conn->getPdo()
-            ->query("SELECT * FROM users WHERE name = 'Charlie'")
-            ->fetchAll(PDO::FETCH_ASSOC);
-
-        $this->assertEquals(41, $rows[0]['age']);
-    }
-
-    public function test_delete_removes_rows()
-    {
-        $this->conn->getPdo()->exec("INSERT INTO users (name, age) VALUES ('Dave', 50)");
-
-        $qb = new QueryBuilder($this->conn);
-        $qb->table('users')
-            ->where('name', '=', 'Dave')
             ->delete();
 
-        $rows = $this->conn->getPdo()
-            ->query("SELECT * FROM users")
-            ->fetchAll(PDO::FETCH_ASSOC);
+        $this->assertSame(1, $deleted);
 
-        $this->assertCount(0, $rows);
+        // Vérifie
+        $users = $qb->table('users')->select()->get();
+        $this->assertCount(0, $users);
     }
 }

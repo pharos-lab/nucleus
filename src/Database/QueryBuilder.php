@@ -4,18 +4,23 @@ declare(strict_types=1);
 
 namespace Nucleus\Database;
 
+use Nucleus\Contracts\Database\QueryBuilderInterface;
 use PDO;
+use stdClass;
 
-class QueryBuilder
+class QueryBuilder implements QueryBuilderInterface
 {
-    protected Connection $connection;
-    protected string $table = '';
-    protected array $columns = ['*'];
-    protected array $wheres = [];
+    private PDO $pdo;
+    private string $table;
+    private array $columns = ['*'];
+    private array $where = [];
+    private array $bindings = [];
+    private string $action = '';
+    private array $data = [];
 
     public function __construct(Connection $connection)
     {
-        $this->connection = $connection;
+        $this->pdo = $connection->getPdo();
     }
 
     public function table(string $table): self
@@ -26,90 +31,115 @@ class QueryBuilder
 
     public function select(array $columns = ['*']): self
     {
+        $this->action = 'SELECT';
         $this->columns = $columns;
         return $this;
     }
 
-    public function where(string $column, string $operator, mixed $value): self
+    public function where(string $column, string $operator, $value): self
     {
-        $this->wheres[] = [$column, $operator, $value];
+        $placeholder = ':w' . $column . count($this->bindings);
+        $this->where[] = [$column, $operator, $placeholder];
+        $this->bindings[$placeholder] = $value;
+
         return $this;
     }
 
-    public function get(): array
+    public function insert(array $data)
     {
-        $sql = "SELECT " . implode(', ', $this->columns) . " FROM {$this->table}";
-
-        $bindings = [];
-        if ($this->wheres) {
-            $conditions = [];
-            foreach ($this->wheres as $i => [$column, $operator, $value]) {
-                $param = ":w{$i}";
-                $conditions[] = "$column $operator $param";
-                $bindings[$param] = $value;
-            }
-            $sql .= " WHERE " . implode(' AND ', $conditions);
-        }
-
-        $stmt = $this->connection->getPdo()->prepare($sql);
-        $stmt->execute($bindings);
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $this->action = 'INSERT';
+        $this->data = $data;
+        return $this->send();
     }
 
-    public function insert(array $data): bool
+    public function update(array $data)
     {
-        $columns = implode(', ', array_keys($data));
-        $placeholders = implode(', ', array_map(fn($c) => ":$c", array_keys($data)));
-
-        $sql = "INSERT INTO {$this->table} ($columns) VALUES ($placeholders)";
-        $stmt = $this->connection->getPdo()->prepare($sql);
-
-        return $stmt->execute($data);
+        $this->action = 'UPDATE';
+        $this->data = $data;
+        return $this->send();
     }
 
-    public function update(array $data): bool
+    public function delete()
     {
-        $setClauses = [];
-        $bindings = [];
-        foreach ($data as $column => $value) {
-            $param = ":set_$column";
-            $setClauses[] = "$column = $param";
-            $bindings[$param] = $value;
-        }
-
-        $sql = "UPDATE {$this->table} SET " . implode(', ', $setClauses);
-
-        if ($this->wheres) {
-            $conditions = [];
-            foreach ($this->wheres as $i => [$column, $operator, $value]) {
-                $param = ":w{$i}";
-                $conditions[] = "$column $operator $param";
-                $bindings[$param] = $value;
-            }
-            $sql .= " WHERE " . implode(' AND ', $conditions);
-        }
-
-        $stmt = $this->connection->getPdo()->prepare($sql);
-        return $stmt->execute($bindings);
+        $this->action = 'DELETE';
+        return $this->send();
     }
 
-    public function delete(): bool
+    public function get(): stdClass|array
     {
-        $sql = "DELETE FROM {$this->table}";
-        $bindings = [];
+        $this->action = 'SELECT';
+        return $this->send();
+    }
 
-        if ($this->wheres) {
-            $conditions = [];
-            foreach ($this->wheres as $i => [$column, $operator, $value]) {
-                $param = ":w{$i}";
-                $conditions[] = "$column $operator $param";
-                $bindings[$param] = $value;
-            }
-            $sql .= " WHERE " . implode(' AND ', $conditions);
+    public function getQuery(): string
+    {
+        return match($this->action) {
+            'SELECT' => $this->buildSelectQuery(),
+            'INSERT' => $this->buildInsertQuery(),
+            'UPDATE' => $this->buildUpdateQuery(),
+            'DELETE' => $this->buildDeleteQuery(),
+            default => throw new \Exception("Unknown action {$this->action}")
+        };
+    }
+
+    // --- Private builders ---
+
+    private function buildWhereClause(): string
+    {
+        if (!$this->where) return '';
+        $clauses = array_map(fn($w) => "{$w[0]} {$w[1]} {$w[2]}", $this->where);
+        return ' WHERE ' . implode(' AND ', $clauses);
+    }
+
+    private function buildSelectQuery(): string
+    {
+        return 'SELECT ' . implode(', ', $this->columns) .
+               ' FROM ' . $this->table .
+               $this->buildWhereClause();
+    }
+
+    private function buildInsertQuery(): string
+    {
+        $fields = implode(', ', array_keys($this->data));
+        $placeholders = implode(', ', array_map(fn($k) => ':' . $k, array_keys($this->data)));
+        $this->bindings = array_combine(
+            array_map(fn($k) => ':' . $k, array_keys($this->data)),
+            $this->data
+        );
+        return "INSERT INTO {$this->table} ({$fields}) VALUES ({$placeholders})";
+    }
+
+    private function buildUpdateQuery(): string
+    {
+        $set = implode(', ', array_map(fn($k) => "$k = :$k", array_keys($this->data)));
+        $this->bindings = array_merge(
+            array_combine(array_map(fn($k) => ':' . $k, array_keys($this->data)), $this->data),
+            $this->bindings
+        );
+        return "UPDATE {$this->table} SET {$set}" . $this->buildWhereClause();
+    }
+
+    private function buildDeleteQuery(): string
+    {
+        return "DELETE FROM {$this->table}" . $this->buildWhereClause();
+    }
+
+    // --- Execution ---
+
+    private function send(): stdClass|array|int|false
+    {
+        $sql = $this->getQuery();
+        $stmt = $this->pdo->prepare($sql);
+
+        if (!$stmt->execute($this->bindings)) {
+            return false;
         }
 
-        $stmt = $this->connection->getPdo()->prepare($sql);
-        return $stmt->execute($bindings);
+        return match ($this->action) {
+            'SELECT' => $stmt->fetchAll(PDO::FETCH_OBJ),
+            'INSERT' => (int)$this->pdo->lastInsertId(),
+            'UPDATE', 'DELETE' => $stmt->rowCount(),
+            default => false,
+        };
     }
 }
