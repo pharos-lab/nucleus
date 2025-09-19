@@ -1,0 +1,45 @@
+2025-09-19 06:05:11 INFO 1 user providers loaded
+2025-09-19 06:05:11 INFO Error handler registered.
+2025-09-19 06:05:11 INFO 6 routes registered
+2025-09-19 06:05:11 INFO 1 global middlewares registered
+2025-09-19 06:05:11 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/app
+    env=local
+2025-09-19 06:05:11 ERROR Boom from controller
+CONTEXT: 
+    exception={}
+    file=/workspaces/nucleus/app/Controllers/TestController.php
+    line=13
+    trace=#0 [internal function]: App\Controllers\TestController->index(Object(Nucleus\Http\Request))
+#1 /workspaces/nucleus/src/Routing/RouteResolver.php(133): ReflectionMethod->invokeArgs(Object(App\Controllers\TestController), Array)
+#2 /workspaces/nucleus/src/Routing/RouteResolver.php(62): Nucleus\Routing\RouteResolver->resolveController(Array, Object(Nucleus\Http\Request), Array)
+#3 /workspaces/nucleus/src/Routing/Router.php(123): Nucleus\Routing\RouteResolver->resolve(Array, Object(Nucleus\Http\Request), Array)
+#4 /workspaces/nucleus/src/Core/Nucleus.php(100): Nucleus\Routing\Router->resolve(Array, Object(Nucleus\Http\Request), Array)
+#5 /workspaces/nucleus/app/Middleware/TestMiddleware.php(16): Nucleus\Core\Nucleus->{closure:Nucleus\Core\Nucleus::handle():100}(Object(Nucleus\Http\Request))
+#6 /workspaces/nucleus/src/Core/Nucleus.php(99): App\Middleware\TestMiddleware->handle(Object(Nucleus\Http\Request), Object(Closure))
+#7 /workspaces/nucleus/src/Core/Nucleus.php(104): Nucleus\Core\Nucleus->{closure:{closure:Nucleus\Core\Nucleus::handle():99}:99}(Object(Nucleus\Http\Request))
+#8 /workspaces/nucleus/src/Core/Application.php(249): Nucleus\Core\Nucleus->handle(Object(Nucleus\Http\Request))
+#9 /workspaces/nucleus/src/Core/Application.php(222): Nucleus\Core\Application->handleRequest(Object(Nucleus\Http\Request))
+#10 /workspaces/nucleus/app/public/index.php(12): Nucleus\Core\Application->run()
+#11 {main}
+2025-09-19 06:05:11 INFO Request handled
+CONTEXT: 
+    method=GET
+    uri=/
+    status=500
+    duration_ms=0.36
+2025-09-19 06:05:12 INFO 1 user providers loaded
+2025-09-19 06:05:12 INFO Error handler registered.
+2025-09-19 06:05:12 INFO 6 routes registered
+2025-09-19 06:05:12 INFO 1 global middlewares registered
+2025-09-19 06:05:12 INFO Application initialized.
+CONTEXT: 
+    basePath=/workspaces/nucleus/app
+    env=local
+2025-09-19 06:05:12 INFO Request handled
+CONTEXT: 
+    method=GET
+    uri=/favicon.ico
+    status=404
+    duration_ms=0.15

@@ -77,7 +77,6 @@ class Container implements ContainerInterface
         $params = [];
         foreach ($constructor->getParameters() as $param) {
             $paramClass = $param->getType();
-            var_dump($paramClass);
             
             if ($param->isDefaultValueAvailable()) {
                 $params[] = $param->getDefaultValue();

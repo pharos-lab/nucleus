@@ -11,7 +11,7 @@ return [
             'level' => Environment::get('LOG_LEVEL', 'debug'),
         ],
         'daily' => [
-            'path' => 'storage/logs',
+            'path' => Environment::get('LOG_PATH', 'storage/logs'),
             'level' => Environment::get('LOG_LEVEL', 'debug'),
             'days' => Environment::get('LOG_DAYS', 14),
         ],

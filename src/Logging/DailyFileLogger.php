@@ -19,8 +19,6 @@ class DailyFileLogger extends AbstractLogger implements NucleusLoggerInterface
     protected string $level;
     protected FileLogger $logger;
 
-    public static int $loggerCount = 0;
-
     public function __construct(string $directory, string $level = 'debug', int $days = 7)
     {
         $this->directory = rtrim($directory, '/');
@@ -31,9 +29,6 @@ class DailyFileLogger extends AbstractLogger implements NucleusLoggerInterface
         if (!is_dir($this->directory)) {
             mkdir($this->directory, 0777, true);
         }
-
-        self::$loggerCount++;
-        var_dump('DailyFileLogger instances: ' . self::$loggerCount);
     }
 
     public function log($level, $message, array $context = []): void
