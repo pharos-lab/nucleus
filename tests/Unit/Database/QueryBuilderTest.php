@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Tests\Unit\Database;
+
 use Nucleus\Database\Connection;
 use PHPUnit\Framework\TestCase;
 use Nucleus\Database\QueryBuilder;

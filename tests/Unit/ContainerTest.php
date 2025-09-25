@@ -2,8 +2,12 @@
 
 declare(strict_types=1);
 
+namespace Tests\Unit;
+
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Nucleus\Container\Container;
+use stdClass;
 
 class ContainerTest extends TestCase
 {

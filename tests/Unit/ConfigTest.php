@@ -1,5 +1,8 @@
 <?php
 
+
+namespace Tests\Unit;
+
 use PHPUnit\Framework\TestCase;
 use Nucleus\Config\Config;
 use Nucleus\Config\Environment;
@@ -17,7 +20,7 @@ final class ConfigTest extends TestCase
 
     public function testCanLoadSimpleConfigValue(): void
     {
-        $this->assertSame('testing', $this->config->get('app.env'));
+        $this->assertSame('local', $this->config->get('app.env'));
     }
 
     public function testCanLoadNestedConfigValues(): void

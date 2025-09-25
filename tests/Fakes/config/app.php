@@ -10,6 +10,6 @@ return [
         FakeUserProvider::class,
     ],
 
-    'env' => Environment::get('APP_ENV', 'dev'),
+    'env' => Environment::get('APP_ENV', 'local'),
     'timezone' => Environment::get('APP_TIMEZONE', 'UTC'),
 ];
