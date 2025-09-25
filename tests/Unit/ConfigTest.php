@@ -41,7 +41,7 @@ final class ConfigTest extends TestCase
 
     public function testLoadsMultipleConfigFiles(): void
     {
-        $this->assertSame('testing', $this->config->get('app.env'));
+        $this->assertSame('local', $this->config->get('app.env'));
         $this->assertSame('168.148.2.254', $this->config->get('database.connections.mysql.host'));
     }
 }

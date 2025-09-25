@@ -3,7 +3,7 @@
 use Nucleus\Config\Environment;
 
 return [
-    'driver' => Environment::get('LOG_DRIVER', 'daily'),
+    'driver' => Environment::get('LOG_DRIVER', 'single'),
     
     'drivers' => [
         'single' => [

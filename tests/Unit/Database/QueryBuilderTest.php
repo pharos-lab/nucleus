@@ -87,6 +87,7 @@ class QueryBuilderTest extends TestCase
 
         // Vérifie
         $users = $qb->table('users')->select()->get();
+        
         $this->assertSame('bobby@example.com', $users[0]->email);
     }
 

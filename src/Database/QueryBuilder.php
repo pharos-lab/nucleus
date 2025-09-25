@@ -40,7 +40,7 @@ class QueryBuilder implements QueryBuilderInterface
     {
         $placeholder = ':w' . $column . count($this->bindings);
         $this->where[] = [$column, $operator, $placeholder];
-        $this->bindings[$placeholder] = $value;
+        $this->bindings[ltrim($placeholder, ':')] = $value;
 
         return $this;
     }
@@ -102,10 +102,8 @@ class QueryBuilder implements QueryBuilderInterface
     {
         $fields = implode(', ', array_keys($this->data));
         $placeholders = implode(', ', array_map(fn($k) => ':' . $k, array_keys($this->data)));
-        $this->bindings = array_combine(
-            array_map(fn($k) => ':' . $k, array_keys($this->data)),
-            $this->data
-        );
+        $this->bindings = $this->data;
+
         return "INSERT INTO {$this->table} ({$fields}) VALUES ({$placeholders})";
     }
 
@@ -113,7 +111,7 @@ class QueryBuilder implements QueryBuilderInterface
     {
         $set = implode(', ', array_map(fn($k) => "$k = :$k", array_keys($this->data)));
         $this->bindings = array_merge(
-            array_combine(array_map(fn($k) => ':' . $k, array_keys($this->data)), $this->data),
+            $this->data,
             $this->bindings
         );
         return "UPDATE {$this->table} SET {$set}" . $this->buildWhereClause();
@@ -129,11 +127,15 @@ class QueryBuilder implements QueryBuilderInterface
     private function send(): stdClass|array|int|false
     {
         $sql = $this->getQuery();
+
         $stmt = $this->pdo->prepare($sql);
 
         if (!$stmt->execute($this->bindings)) {
             return false;
         }
+
+        $this->bindings = [];
+        $this->where = [];
 
         return match ($this->action) {
             'SELECT' => $stmt->fetchAll(PDO::FETCH_OBJ),
