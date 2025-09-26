@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Nucleus\Database;
 
+use Exception;
 use Nucleus\Contracts\Database\QueryBuilderInterface;
 use PDO;
 use stdClass;
 
 class QueryBuilder implements QueryBuilderInterface
 {
+    use ActionBuilder, ClauseBuilder;
+
     private PDO $pdo;
     private string $table;
     private array $columns = ['*'];
@@ -17,6 +20,9 @@ class QueryBuilder implements QueryBuilderInterface
     private array $bindings = [];
     private string $action = '';
     private array $data = [];
+    private array $orderBy = [];
+    private int $limit;
+    private int $offset;
 
     public function __construct(Connection $connection)
     {
@@ -36,30 +42,21 @@ class QueryBuilder implements QueryBuilderInterface
         return $this;
     }
 
-    public function where(string $column, string $operator, $value): self
-    {
-        $placeholder = ':w' . $column . count($this->bindings);
-        $this->where[] = [$column, $operator, $placeholder];
-        $this->bindings[ltrim($placeholder, ':')] = $value;
-
-        return $this;
-    }
-
-    public function insert(array $data)
+    public function insert(array $data): int
     {
         $this->action = 'INSERT';
         $this->data = $data;
         return $this->send();
     }
 
-    public function update(array $data)
+    public function update(array $data): int
     {
         $this->action = 'UPDATE';
         $this->data = $data;
         return $this->send();
     }
 
-    public function delete()
+    public function delete(): int
     {
         $this->action = 'DELETE';
         return $this->send();
@@ -82,44 +79,39 @@ class QueryBuilder implements QueryBuilderInterface
         };
     }
 
-    // --- Private builders ---
-
-    private function buildWhereClause(): string
+     public function where(string $column, string $operator, $value): self
     {
-        if (!$this->where) return '';
-        $clauses = array_map(fn($w) => "{$w[0]} {$w[1]} {$w[2]}", $this->where);
-        return ' WHERE ' . implode(' AND ', $clauses);
+        $placeholder = ':w' . $column . count($this->bindings);
+        $this->where[] = [$column, $operator, $placeholder];
+        $this->bindings[ltrim($placeholder, ':')] = $value;
+
+        return $this;
     }
 
-    private function buildSelectQuery(): string
+    public function orderBy(string $column, string $direction = 'ASC'): self
     {
-        return 'SELECT ' . implode(', ', $this->columns) .
-               ' FROM ' . $this->table .
-               $this->buildWhereClause();
+        $directionUpper = strtoupper($direction);
+
+        if (!in_array($directionUpper, ['ASC', 'DESC'])) {
+            throw new Exception("The 'direction' argument must be 'ASC' or 'DESC', $direction given!");
+        }
+        $this->orderBy = ["column" => $column, "direction" => $directionUpper];
+
+        return $this;
     }
 
-    private function buildInsertQuery(): string
+    public function limit(int $limit): self
     {
-        $fields = implode(', ', array_keys($this->data));
-        $placeholders = implode(', ', array_map(fn($k) => ':' . $k, array_keys($this->data)));
-        $this->bindings = $this->data;
+        $this->limit = $limit;
 
-        return "INSERT INTO {$this->table} ({$fields}) VALUES ({$placeholders})";
+        return $this;
     }
 
-    private function buildUpdateQuery(): string
+    public function offset(int $offset): self
     {
-        $set = implode(', ', array_map(fn($k) => "$k = :$k", array_keys($this->data)));
-        $this->bindings = array_merge(
-            $this->data,
-            $this->bindings
-        );
-        return "UPDATE {$this->table} SET {$set}" . $this->buildWhereClause();
-    }
+        $this->offset = $offset;
 
-    private function buildDeleteQuery(): string
-    {
-        return "DELETE FROM {$this->table}" . $this->buildWhereClause();
+        return $this;
     }
 
     // --- Execution ---
@@ -136,6 +128,7 @@ class QueryBuilder implements QueryBuilderInterface
 
         $this->bindings = [];
         $this->where = [];
+        $this->orderBy= [];
 
         return match ($this->action) {
             'SELECT' => $stmt->fetchAll(PDO::FETCH_OBJ),

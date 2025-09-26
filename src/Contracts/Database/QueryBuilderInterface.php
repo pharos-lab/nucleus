@@ -12,11 +12,17 @@ interface QueryBuilderInterface
 
     public function where(string $column, string $operator, $value): self;
 
-    public function insert(array $data);
+    public function insert(array $data): int;
 
-    public function update(array $data);
+    public function update(array $data): int;
 
-    public function delete();
+    public function delete(): int;
+
+    public function orderBy(string $column, string $direction): self;
+
+    public function limit(int $limit): self;
+
+    public function offset(int $offset): self;
 
     public function get(): stdClass|array;
 
